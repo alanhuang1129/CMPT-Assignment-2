@@ -1,0 +1,73 @@
+void InitializeBoard(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInBoard);
+void DisplayBoard(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInBoard);
+
+void InitializeBoard(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInBoard) {
+	int CurrentRow = 1;
+	int CurrentColumn = 1;
+
+	for (int i = 1; i < MAX_ARRAY_SIZE + 1; i++) {
+		for (int j = 1; j < MAX_ARRAY_SIZE + 1; j++) {
+     
+			if ((CurrentRow >= 1 && CurrentRow <= 3) || (MAX_ARRAY_SIZE - CurrentRow < 1 || MAX_ARRAY_SIZE - CurrentRow > 3)) {
+				CMCheckersBoard[i][j] = 0;
+				continue;
+			}
+			else if (CurrentRow % 2 == 1 && CurrentColumn % 2 == 1) {
+				CMCheckersBoard[i][j] = 0;
+				continue;
+			}
+			else if (CurrentRow % 2 == 0 && CurrentColumn % 2 == 0) {
+				CMCheckersBoard[i][j] = 0;
+				continue;
+			}
+			else if (CurrentRow == 1) {
+				CMCheckersBoard[i][j] = 2;
+				continue;
+			}
+			else if (CurrentRow == MAX_ARRAY_SIZE) {
+				CMCheckersBoard[i][j] = 5;
+				continue;
+			}
+			else if (CurrentRow >= 2 && CurrentRow <= 4) {
+				CMCheckersBoard[i][j] = 1;
+				continue;
+			}
+			else if (MAX_ARRAY_SIZE - CurrentRow >= 1 && MAX_ARRAY_SIZE - CurrentRow <= 3){
+				CMCheckersBoard[i][j] = 4;
+				continue;
+			}
+			CurrentColumn++;
+		}
+		CurrentRow++;
+	}
+}
+
+void DisplayBoard(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInBoard) {
+	int BoardCount = 1;
+	for (int i = 1; i < MAX_ARRAY_SIZE + 1; i++) {
+		for (int j = 1; j < MAX_ARRAY_SIZE + 1; j++) {
+			if (j = numRowsInBoard) {
+				cout << endl;
+			if (CMCheckersBoard[i][j] = 0) {
+				cout << setw(4) << j + (i * 10);
+			}
+			else if (CMCheckersBoard[i][j] = 1) {
+				cout << setw(4) << WHITESOLDIER;
+			}
+			else if (CMCheckersBoard[i][j] = 2) {
+				cout << setw(4) << WHITESMULE;
+			}
+			else if (CMCheckersBoard[i][j] = 3) {
+				cout << setw(4) << WHITEKING;
+			}
+			else if (CMCheckersBoard[i][j] = 4) {
+				cout << setw(4) << REDSOLDIER;
+			}
+			else if (CMCheckersBoard[i][j] = 5) {
+				cout << setw(4) << REDMULE;
+			}
+			else if (CMCheckersBoard[i][j] = 6) {
+				cout << setw(4) << REDKING;
+			}
+	}
+}
