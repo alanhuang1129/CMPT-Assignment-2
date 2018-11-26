@@ -36,5 +36,5 @@
 *.vcxproj*
 *.pdb*
 *.idb*
-
+*.suo*
 isMove1Squares/Debug/*
