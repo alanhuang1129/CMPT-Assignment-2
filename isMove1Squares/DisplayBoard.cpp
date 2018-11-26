@@ -18,21 +18,8 @@ void InitializeBoard(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int nu
 	RowsOnEachSide = (numRowsInBoard / 2) - 1; //Amount of rows of each side
 	for (int i = 0; i < MAX_ARRAY_SIZE; i++) { //rows of array
 		for (int j = 0; j < MAX_ARRAY_SIZE; j++) { //columns of array
-
-			if ((CurrentRow >= 1 && CurrentRow <= 3) || (MAX_ARRAY_SIZE - CurrentRow < 1 || MAX_ARRAY_SIZE - CurrentRow > 3)) {
-				CMCheckersBoard[i][j] = 0;
-				continue;
-			}
-			else if (CurrentRow % 2 == 1 && CurrentColumn % 2 == 1) {
-				CMCheckersBoard[i][j] = 0;
-				continue;
-			}
-			else if (CurrentRow % 2 == 0 && CurrentColumn % 2 == 0) {
-				CMCheckersBoard[i][j] = 0;
-				continue;
-			}
 			//Initializing the white's side based on the board
-			else if (CurrentRow % 2 == 1 && CurrentColumn % 2 == 0 && CurrentRow <= RowsOnEachSide) {
+			if (CurrentRow % 2 == 1 && CurrentColumn % 2 == 0 && CurrentRow <= RowsOnEachSide) {
 				CMCheckersBoard[i][j] = 1;
 					if (CurrentRow == 1) {
 						CMCheckersBoard[i][j] = 2;
@@ -53,6 +40,9 @@ void InitializeBoard(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int nu
 				if (CurrentRow = numRowsInBoard) {
 					CMCheckersBoard[i][j] = 5;
 				}
+			}
+			else {
+				CMCheckersBoard[i][j] = 0;
 			}
 		}
 		CurrentColumn++;
@@ -97,6 +87,25 @@ void DisplayBoard(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRo
 }
 bool IsMove1Square(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInBoard, int player, int xLoc, int yLoc)
 {
+	if (player = 1) {
+		if (CMCheckersBoard[yLoc][xLoc] == 1 || CMCheckersBoard[yLoc][xLoc] == 2) {// 1 for soldier and 2 for mule (white)
+			//Checks for available moves at the left side of the board (white)
+			if (xLoc == 0) {
+				if (CMCheckersBoard[yLoc + 1][numRowsInBoard] != 0 && CMCheckersBoard[yLoc + 1][xLoc + 1] != 0)
+					return false;
+				else
+					return true;
+			}
+			//Checks for available moves at the right side of the board (white)
+			else if (xLoc == numRowsInBoard) {
+				if (CMCheckersBoard[yLoc + 1][numRowsInBoard - 1] != 0 && CMCheckersBoard[yLoc + 1][0] != 0)
+					return false;
+				else
+					return true;
+			}
+			else if ()
+
+		}
 	if (CMCheckersBoard[yLoc][xLoc]) {
 
 	}
