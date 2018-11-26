@@ -103,11 +103,48 @@ bool IsMove1Square(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numR
 				else
 					return true;
 			}
-			else if ()
+			//Checks for available moves in the middle section of the board (white)
+			else {
+				if (CMCheckersBoard[yLoc + 1][xLoc - 1] != 0 && CMCheckersBoard[yLoc + 1][xLoc + 1] != 0)
+					return false;
+				else
+					return true;
+			}
+		}
+		//Test for White Kings
+		if (CMCheckersBoard[yLoc][xLoc] == 3) {
 
 		}
-	if (CMCheckersBoard[yLoc][xLoc]) {
+	}
+	if (player = 2) {
+		//Test movement availability for red soldiers and red mules
+		if (CMCheckersBoard[yLoc][xLoc] == 4 || CMCheckersBoard[yLoc][xLoc] == 5) {
+			//Test for when the red piece is on the left side of the board
+			if (xLoc == 0) {
+				if (CMCheckersBoard[yLoc + 1][numRowsInBoard] != 0 && CMCheckersBoard[yLoc + 1][xLoc + 1] != 0)
+					return false;
+				else 
+					return true;
+			}
+			//Test for when the red piece is on the right side of the board
+			else if (xLoc == numRowsInBoard) {
+				if (CMCheckersBoard[yLoc + 1][numRowsInBoard - 1] != 0 && CMCheckersBoard[yLoc + 1][0] != 0)
+					return false;
+				else
+					return true;
+			}
+			//Test for movement in the middle section of the board
+			else {
+				if (CMCheckersBoard[yLoc + 1][xLoc - 1] != 0 && CMCheckersBoard[yLoc + 1][xLoc + 1] != 0)
+					return false;
+				else
+					return true;
+			}
+		}
+		//Test for red kings
+		if (CMCheckersBoard[yLoc][xLoc] == 6) {
 
+		}
 	}
 
 }
