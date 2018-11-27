@@ -124,29 +124,29 @@ void InitializeBoard(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int nu
 
 void DisplayBoard(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInBoard) {
 	int BoardCount = 1;
-	for (int i = 1; i < MAX_ARRAY_SIZE + 1; i++) {
-		for (int j = 1; j < MAX_ARRAY_SIZE + 1; j++) {
-			if (j = numRowsInBoard) {
+	for (int i = 0; i < numRowsInBoard; i++) {
+		for (int j = 0; j < numRowsInBoard; j++) {
+			if (j == numRowsInBoard) {
 				cout << endl;
-				if (CMCheckersBoard[i][j] = 0) {	
+				if (CMCheckersBoard[i][j] == 0) {	
 					cout << setw(4) << j + (i * 10);
 				}
-				else if (CMCheckersBoard[i][j] = 1) {
+				else if (CMCheckersBoard[i][j] == 1) {
 					cout << setw(4) << "WHITESOLDIER";
 				}
-				else if (CMCheckersBoard[i][j] = 2) {
+				else if (CMCheckersBoard[i][j] == 2) {
 					cout << setw(4) << "WHITEMULE";
 				}
-				else if (CMCheckersBoard[i][j] = 3) {
+				else if (CMCheckersBoard[i][j] == 3) {
 					cout << setw(4) << "WHITEKING";
 				}
-				else if (CMCheckersBoard[i][j] = 4) {
+				else if (CMCheckersBoard[i][j] == 4) {
 					cout << setw(4) << "REDSOLDIER";
 				}
-				else if (CMCheckersBoard[i][j] = 5) {
+				else if (CMCheckersBoard[i][j] == 5) {
 					cout << setw(4) << "REDMULE";
 				}
-				else if (CMCheckersBoard[i][j] = 6) {
+				else if (CMCheckersBoard[i][j] == 6) {
 					cout << setw(4) << "REDKING";
 				}
 			}
