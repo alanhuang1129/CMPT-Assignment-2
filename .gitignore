@@ -37,4 +37,6 @@
 *.pdb*
 *.idb*
 *.suo*
+*.sln*
+
 isMove1Squares/Debug/*
