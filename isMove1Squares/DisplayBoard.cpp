@@ -4,10 +4,6 @@
 using namespace std;
 
 const int MAX_ARRAY_SIZE = 18;
-int main()
-{
-	int *arrayAddress[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE];
-}
 void InitializeBoard(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInBoard);
 void DisplayBoard(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInBoard);
 
@@ -113,37 +109,113 @@ bool IsMove1Square(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numR
 		}
 		//Test for White Kings
 		if (CMCheckersBoard[yLoc][xLoc] == 3) {
-
+			//Test left side of board
+			if (xLoc == 0) {
+				//Test front moves
+				if (CMCheckersBoard[yLoc + 1][numRowsInBoard] != 0 && CMCheckersBoard[yLoc + 1][xLoc + 1] != 0)
+					return false;
+				else
+					return true;
+				//Test back moves
+				if (CMCheckersBoard[yLoc - 1][numRowsInBoard] != 0 && CMCheckersBoard[yLoc - 1][xLoc + 1] != 0)
+					return false;
+				else
+					return true;
+			}
+			//Test right side of the board
+			else if (xLoc == numRowsInBoard) {
+				//Test front moves
+				if (CMCheckersBoard[yLoc + 1][numRowsInBoard - 1] != 0 && CMCheckersBoard[yLoc + 1][0] != 0)
+					return false;
+				else
+					return true;
+				//Test back moves
+				if (CMCheckersBoard[yLoc - 1][numRowsInBoard - 1] != 0 && CMCheckersBoard[yLoc - 1][0] != 0)
+					return false;
+				else
+					return true;
+			}
+			//Test middle section of the board
+			else {
+				//Test front moves
+				if (CMCheckersBoard[yLoc + 1][xLoc - 1] != 0 && CMCheckersBoard[yLoc + 1][xLoc + 1] != 0)
+					return false;
+				else
+					return true;
+				//Test back moves
+				if (CMCheckersBoard[yLoc - 1][xLoc - 1] != 0 && CMCheckersBoard[yLoc - 1][xLoc + 1] != 0)
+					return false;
+				else
+					return true;
+			}
 		}
 	}
 	if (player = 2) {
 		//Test movement availability for red soldiers and red mules
 		if (CMCheckersBoard[yLoc][xLoc] == 4 || CMCheckersBoard[yLoc][xLoc] == 5) {
-			//Test for when the red piece is on the left side of the board
+			//Test for when the red piece is on the left side of the board (Red moves the opposite direction)
 			if (xLoc == 0) {
-				if (CMCheckersBoard[yLoc + 1][numRowsInBoard] != 0 && CMCheckersBoard[yLoc + 1][xLoc + 1] != 0)
+				if (CMCheckersBoard[yLoc - 1][numRowsInBoard] != 0 && CMCheckersBoard[yLoc - 1][xLoc + 1] != 0)
 					return false;
 				else 
 					return true;
 			}
 			//Test for when the red piece is on the right side of the board
 			else if (xLoc == numRowsInBoard) {
-				if (CMCheckersBoard[yLoc + 1][numRowsInBoard - 1] != 0 && CMCheckersBoard[yLoc + 1][0] != 0)
+				if (CMCheckersBoard[yLoc - 1][numRowsInBoard - 1] != 0 && CMCheckersBoard[yLoc - 1][0] != 0)
 					return false;
 				else
 					return true;
 			}
 			//Test for movement in the middle section of the board
 			else {
-				if (CMCheckersBoard[yLoc + 1][xLoc - 1] != 0 && CMCheckersBoard[yLoc + 1][xLoc + 1] != 0)
+				if (CMCheckersBoard[yLoc - 1][xLoc - 1] != 0 && CMCheckersBoard[yLoc - 1][xLoc + 1] != 0)
 					return false;
 				else
 					return true;
 			}
 		}
-		//Test for red kings
+		//Test for Red Kings
 		if (CMCheckersBoard[yLoc][xLoc] == 6) {
-
+			//Test left side of board
+			if (xLoc == 0) {
+				//Test back moves
+				if (CMCheckersBoard[yLoc + 1][numRowsInBoard] != 0 && CMCheckersBoard[yLoc + 1][xLoc + 1] != 0)
+					return false;
+				else
+					return true;
+				//Test front moves
+				if (CMCheckersBoard[yLoc - 1][numRowsInBoard] != 0 && CMCheckersBoard[yLoc - 1][xLoc + 1] != 0)
+					return false;
+				else
+					return true;
+			}
+			//Test right side of the board
+			else if (xLoc == numRowsInBoard) {
+				//Test back moves
+				if (CMCheckersBoard[yLoc + 1][numRowsInBoard - 1] != 0 && CMCheckersBoard[yLoc + 1][0] != 0)
+					return false;
+				else
+					return true;
+				//Test front moves
+				if (CMCheckersBoard[yLoc - 1][numRowsInBoard - 1] != 0 && CMCheckersBoard[yLoc - 1][0] != 0)
+					return false;
+				else
+					return true;
+			}
+			//Test middle section of the board
+			else {
+				//Test back moves
+				if (CMCheckersBoard[yLoc + 1][xLoc - 1] != 0 && CMCheckersBoard[yLoc + 1][xLoc + 1] != 0)
+					return false;
+				else
+					return true;
+				//Test front moves
+				if (CMCheckersBoard[yLoc - 1][xLoc - 1] != 0 && CMCheckersBoard[yLoc - 1][xLoc + 1] != 0)
+					return false;
+				else
+					return true;
+			}
 		}
 	}
 
