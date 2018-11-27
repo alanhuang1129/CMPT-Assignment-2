@@ -1,11 +1,86 @@
 #include <iostream>
 #include <iomanip>
-#include <cmath>
+#include <string>
+#include <locale>
+
 using namespace std;
 
 const int MAX_ARRAY_SIZE = 18;
+const int MIN_ARRAY_SIZE = 8;
+const int MAX_PIECES = 72;
+const int NOPLAYER = 0;
+const int WHITEWINS = 1;
+const int REDWINS = 2;
+const int NOONEWINS = 0;
+const int WHITESOLDIER = 1;
+const int WHITEMULE = 2;
+const int WHITEKING = 3;
+const int REDSOLDIER = 4;
+const int REDMULE = 5;
+const int REDKING = 6;
+const int WHITEPLAYER = 1;
+const int REDPLAYER = 2;
+
 void InitializeBoard(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInBoard);
 void DisplayBoard(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInBoard);
+
+int main()
+{
+	int myCMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE] = { 0 };
+
+	int xIndicesMove[MAX_PIECES] = { 0 };	// Declares move arrays
+	int yIndicesMove[MAX_PIECES] = { 0 };	// Describes the checkers that can be moved
+
+	int xIndicesJump[MAX_PIECES] = { 0 };	// Declares jump arrays
+	int yIndicesJump[MAX_PIECES] = { 0 };	// Describes the checkers that can jump opponent's checkers
+
+	int numRowsInBoard = 0;
+
+	int testInt = 0;
+
+	for (int i = 0; i < 3; i++)
+	{
+
+		cout << "Enter the number of squares along each edge of the board\n";
+		cin >> numRowsInBoard;
+		if (!cin.fail())	// Tests if it is an integer
+		{
+			if ((numRowsInBoard >= 8) && (numRowsInBoard <= 18))	// Tests size of board
+			{
+				if ((numRowsInBoard % 2) == 0)	// Tests if it is even
+				{
+					// ***** Continue here if all parameters pass ******
+					InitializeBoard(myCMCheckersBoard, numRowsInBoard);
+
+					DisplayBoard(myCMCheckersBoard, numRowsInBoard);
+
+					return 1;
+				}
+				else
+				{
+					cerr << "ERROR: Board size odd.\n";
+				}
+			}
+			else if (numRowsInBoard < 8)	// If it is too small
+			{
+				cerr << "ERROR: Board size too small.\n";
+			}
+			else	// If it is too big
+			{
+				cerr << "ERROR: Board size too large.\n";
+			}
+		}
+		else
+		{
+			cerr << "ERROR: Board size is not an integer.\n";
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		}
+		cout << "8 <= number of squares <= 18\n\n";
+	}
+	cerr << "ERROR: Too many errors entering the size of the board.\n";
+	return 0;
+}
 
 void InitializeBoard(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInBoard) {
 	int CurrentRow = 1;
@@ -56,7 +131,7 @@ void DisplayBoard(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRo
 		for (int j = 1; j < MAX_ARRAY_SIZE + 1; j++) {
 			if (j = numRowsInBoard) {
 				cout << endl;
-				if (CMCheckersBoard[i][j] = 0) {
+				if (CMCheckersBoard[i][j] = 0) {	
 					cout << setw(4) << j + (i * 10);
 				}
 				else if (CMCheckersBoard[i][j] = 1) {

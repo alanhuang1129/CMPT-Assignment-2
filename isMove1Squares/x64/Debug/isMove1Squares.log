@@ -1,3 +1,3 @@
 ﻿  DisplayBoard.cpp
-c:\users\alan_\source\repos\ismove1squares\cmpt-assignment-2\ismove1squares\displayboard.cpp(53): error C2084: function 'void DisplayBoard(int [][18],int)' already has a body
-  c:\users\alan_\source\repos\ismove1squares\cmpt-assignment-2\ismove1squares\displayboard.cpp(49): note: see previous definition of 'DisplayBoard'
+c:\users\alan_\source\repos\ismove1squares\cmpt-assignment-2\ismove1squares\displayboard.cpp(128): error C2084: function 'void DisplayBoard(int [][18],int)' already has a body
+  c:\users\alan_\source\repos\ismove1squares\cmpt-assignment-2\ismove1squares\displayboard.cpp(124): note: see previous definition of 'DisplayBoard'
