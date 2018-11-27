@@ -1,0 +1,54 @@
+int CountMove1Squares(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInBoard, int player, int xLocArray[], int yLocArray[]);
+int CountJumps(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInBoard, int player, int xLocArray[], int yLocArray[]);
+int CountMove1Squares(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInBoard, int player, int xLocArray[], int yLocArray[]) {
+	int counter = 0;
+	for (int i = 0; i < MAX_PIECES; i++) {
+		yLocArray[i] = -1;
+		xLocArray[i] = -1;
+	}
+	for (int i = 0; i < numRowsInBoard; i++) {
+		for (int j = 0; j < numRowsInBoard; j++) {
+			if (player == 1 && (CMCheckersBoard[i][j] == 1 || CMCheckersBoard[i][j] == 2 || CMCheckersBoard[i][j] == 3)) {
+				if (IsMove1Square(CMCheckersBoard, numRowsInBoard, player, i, j) == true) {
+					yLocArray[counter] = i;
+					xLocArray[counter] = j;
+					counter++;
+				}
+			}
+			if (player == 2 && (CMCheckersBoard[i][j] == 4 || CMCheckersBoard[i][j] == 5 || CMCheckersBoard[i][j] == 6)) {
+				if (IsMove1Square(CMCheckersBoard, numRowsInBoard, player, i, j) == true) {
+					yLocArray[counter] = i;
+					xLocArray[counter] = j;
+					counter++;
+				}
+			}
+		}
+	}
+}
+int CountJumps(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInBoard, int player, int xLocArray[], int yLocArray[]) {
+	int counter = 0;
+	for (int i = 0; i < MAX_PIECES; i++) {
+		yLocArray[i] = -1;
+		xLocArray[i] = -1;
+		int counter = 0;
+	}
+	for (int i = 0; i < numRowsInBoard; i++) {
+		for (int j = 0; j < numRowsInBoard; j++) {
+			if (player == 1 && (CMCheckersBoard[i][j] == 1 || CMCheckersBoard[i][j] == 2 || CMCheckersBoard[i][j] == 3)) {
+				if (IsJump(CMCheckersBoard, numRowsInBoard, player, i, j) == true) {
+					yLocArray[counter] = i;
+					xLocArray[counter] = j;
+					counter++;
+				}
+			}
+			if (player == 2 && (CMCheckersBoard[i][j] == 4 || CMCheckersBoard[i][j] == 5 || CMCheckersBoard[i][j] == 6)) {
+				if (IsJump(CMCheckersBoard, numRowsInBoard, player, i, j) == true) {
+					yLocArray[counter] = i;
+					xLocArray[counter] = j;
+					counter++;
+				}
+			}
+		}
+	}
+	return(counter);
+}
