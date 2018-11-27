@@ -1,0 +1,27 @@
+USEFUL GIT COMMANDS
+-------------------
+
+git clone <url>
+
+git status
+
+git add <files>
+
+git commit -m "<your message>"
+
+git push
+
+*
+git pull
+
+
+
+BASH COMMANDS
+--------------
+
+ls								list current directory
+cd <directory> 							change directory
+rm -rf <file>
+cp <file> <copy_name>
+cat <file>							Prints file to standard output
+mv <file> <new_name>						change name of file
