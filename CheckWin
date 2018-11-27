@@ -1,0 +1,58 @@
+bool CheckWin(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInBoard) {
+	int pieceChecker = 0;
+	int whiteSoldier = 0;
+	int whiteMule = 0;
+	int whiteKing = 0;
+	int redSoldier = 0;
+	int redMule = 0;
+	int redKing = 0;
+	for (int i = 0; i < numRowsInBoard i++) {
+		for (int j = 0; j < numRowsinBoard; j++) {
+			pieceChecker = CMCheckersBoard[i][j];
+			if (pieceChecker = 1) {
+				whiteSoldier++;
+				continue;
+			}
+			if (pieceChecker = 2) {
+				whiteMule++;
+				continue;
+			}
+			if (pieceChecker = 3) {
+				whiteKing++;
+				continue;
+			}
+			if (pieceChecker = 4) {
+				redSoldier++;
+				continue;
+			}
+			if (pieceChecker = 5) {
+				redMule++;
+				continue;
+			}
+			if (pieceChecker = 6) {
+				redKing++;
+				continue;
+			}
+		}
+	}
+
+	if (redMule == 0) {
+		cout << "The Red Player has won the game by losing all of the Red Mules" << endl;
+		return(true);
+	}
+	else if (whiteMule == 0) {
+		cout << "The White Player has won the game by losing all of the White Mules" << endl;
+		return(true);
+	}
+	else if (redSoldier == 0 && redKing == 0) {
+		cout << "The White Player has won by capturing all of the red players soldiers and kings" << endl;
+		return(true);
+	}
+	else if (whiteSoldier == 0 && whiteKing == 0) {
+		cout << "The Red Player has won by capturing all of the white players soldiers and kings" << endl;
+		return(true);
+	}
+	else {
+		return(false);
+	}
+}
