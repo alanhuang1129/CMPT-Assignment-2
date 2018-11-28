@@ -28,7 +28,8 @@ bool MakeMove(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsIn
 struct Coordinates {
 	int columns;
 	int rows;
-}
+};
+Coordinates squareToArray(int numRowsInBoard, int squareNum);
 
 int main()
 {
@@ -46,7 +47,7 @@ int main()
 
 	for (int z = 0; z < 3; z++)
 	{
-		
+
 		cout << "Enter the number of squares along each edge of the board\n";
 		cin >> numRowsInBoard;
 		if (!cin.fail())	// Tests if it is an integer
@@ -101,7 +102,7 @@ void InitializeBoard(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int nu
 				continue;
 			}
 			else if ((j % 2 == 1) && (i % 2 == 1))
-			{	
+			{
 				CMCheckersBoard[i][j] = 0;
 				continue;
 			}
@@ -111,7 +112,7 @@ void InitializeBoard(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int nu
 				CMCheckersBoard[i][j] = 0;
 			}
 
-			else if ((CurrentRow == 1) && (j%2 == 1))	//	White Mule
+			else if ((CurrentRow == 1) && (j % 2 == 1))	//	White Mule
 			{
 				CMCheckersBoard[i][j] = 2;
 			}
@@ -142,45 +143,45 @@ void DisplayBoard(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRo
 
 			switch (CMCheckersBoard[i][j])
 			{
-				case 0:
-				{
-					cout << setw(4) << j + (i * numRowsInBoard);
-					continue;
-				}
-				case 1:
-				{
-					cout << setw(4) << "WS";
-					continue;
-				}
-				case 2:
-				{
-					cout << setw(4) << "WM";
-					continue;
-				}
-				case 3:
-				{
-					cout << setw(4) << "WK";
-					continue;
-				}
-				case 4:
-				{
-					cout << setw(4) << "RS";
-					continue;
-				}
-				case 5:
-				{
-					cout << setw(4) << "RM";
-					continue;
-				}
-				case 6:
-				{
-					cout << setw(4) << "RK";
-					continue;
-				}
-				default:
-				{
-					break;
-				}
+			case 0:
+			{
+				cout << setw(4) << j + (i * numRowsInBoard);
+				continue;
+			}
+			case 1:
+			{
+				cout << setw(4) << "WS";
+				continue;
+			}
+			case 2:
+			{
+				cout << setw(4) << "WM";
+				continue;
+			}
+			case 3:
+			{
+				cout << setw(4) << "WK";
+				continue;
+			}
+			case 4:
+			{
+				cout << setw(4) << "RS";
+				continue;
+			}
+			case 5:
+			{
+				cout << setw(4) << "RM";
+				continue;
+			}
+			case 6:
+			{
+				cout << setw(4) << "RK";
+				continue;
+			}
+			default:
+			{
+				break;
+			}
 			}
 		}
 	}
@@ -189,8 +190,8 @@ void DisplayBoard(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRo
 bool MakeMove(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInBoard, int player, int fromSquareNum, int toSquareNum, bool &jumped) {
 	Coordinates fromSquare = squareToArray(numRowsInBoard, fromSquareNum);
 	Coordinates toSquare = squareToArray(numRowsInBoard, toSquareNum);
-	int ydistance = abs(fromSquare(column) - toSquare(column));
-	int xdistance = abs(fromSquare(row) - toSquare(row));
+	int ydistance = abs(fromSquare.columns - toSquare.columns);
+	int xdistance = abs(fromSquare.rows - toSquare.rows);
 
 	if (ydistance == 1 && xdistance == 1) {
 		return(true);
@@ -201,7 +202,7 @@ bool MakeMove(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsIn
 	}
 
 	if (ydistance == 2 && xdistance == 2) {
-		if (CMCheckersBoard[toSquare(row)][toSquare(column)] != 0) {
+		if (CMCheckersBoard[toSquare.rows][toSquare.columns] != 0) {
 			cout << "Error;  illegal move" << endl;
 			return(false);
 		}
@@ -212,46 +213,46 @@ bool MakeMove(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsIn
 		return(false);
 	}
 
-	else if (CMCheckersBoard[toSquare(row)][toSquare(column)] == WHITESOLDIER || CMCheckersBoard[toSquare(row)][toSquare(column)] == WHITEMULE) {
+	else if (CMCheckersBoard[toSquare.rows][toSquare.columns] == WHITESOLDIER || CMCheckersBoard[toSquare.rows][toSquare.columns] == WHITEMULE) {
 		if (toSquareNum < fromSquareNum) {
 			cout << "Error; illegal move" << endl;
 			return(false);
 		}
 	}
 
-	else if (CMCheckersBoard[toSquare(row)][toSquare(column)] == REDSOLDIER || CMCheckersBoard[toSquare(row)][toSquare(column)] == REDMULE) {
+	else if (CMCheckersBoard[toSquare.rows][toSquare.columns] == REDSOLDIER || CMCheckersBoard[toSquare.rows][toSquare.columns] == REDMULE) {
 		if (toSquareNum > fromSquareNum) {
 			cout << "Error; illegal move" << endl;
 			return(false);
 		}
 	}
 
-	CMCheckersBoard[toSquare(row)][toSquare(column)] = CMCheckersBoard[fromSquare(row)][fromSquare(column)];
-	CMCheckersBoard[fromSquare(row)][fromSquare(column)] = 0;
+	CMCheckersBoard[toSquare.rows][toSquare.columns] = CMCheckersBoard[fromSquare.rows][fromSquare.columns];
+	CMCheckersBoard[fromSquare.rows][fromSquare.columns] = 0;
 
-	if (CMCheckersBoard[toSquare(row)][toSquare(column)] == WHITESOLDIER) {
-		if (toSquare(row) = 1) {
-			CMCheckersBoard[toSquare(row)][toSquare(column)] == WHITEKING;
+	if (CMCheckersBoard[toSquare.rows][toSquare.columns] == WHITESOLDIER) {
+		if (toSquare.rows = 1) {
+			CMCheckersBoard[toSquare.rows][toSquare.columns] == WHITEKING;
 		}
 	}
 
-	if (CMCheckersBoard[toSquare(row)][toSquare(column)] == WHITEMULE) {
-		if (toSquare(row) = 1) {
-			CMCheckersBoard[toSquare(row)][toSquare(column)] == WHITEKING;
+	if (CMCheckersBoard[toSquare.rows][toSquare.columns] == WHITEMULE) {
+		if (toSquare.rows = 1) {
+			CMCheckersBoard[toSquare.rows][toSquare.columns] == WHITEKING;
 			cout << "White has created a Mule King, Red wins the game" << endl;
 			return(true);
 		}
 	}
 
-	if (CMCheckersBoard[toSquare(row)][toSquare(column)] == REDSOLDIER) {
-		if (toSquare(row) = MAX_ARRAY_SIZE) {
-			CMCheckersBoard[toSquare(row)][toSquare(column)] == REDKING;
+	if (CMCheckersBoard[toSquare.rows][toSquare.columns] == REDSOLDIER) {
+		if (toSquare.rows = MAX_ARRAY_SIZE) {
+			CMCheckersBoard[toSquare.rows][toSquare.columns] == REDKING;
 		}
 	}
 
-	if (CMCheckersBoard[toSquare(row)][toSquare(column)] == REDMULE) {
-		if (toSquare(row) = MAX_ARRAY_SIZE) {
-			CMCheckersBoard[toSquare(row)][toSquare(column)] == REDKING;
+	if (CMCheckersBoard[toSquare.rows][toSquare.columns] == REDMULE) {
+		if (toSquare.rows = MAX_ARRAY_SIZE) {
+			CMCheckersBoard[toSquare.rows][toSquare.columns] == REDKING;
 			cout << "Red has created a Mule King, White wins the game" << endl;
 			return(true);
 		}
@@ -266,6 +267,6 @@ Coordinates squareToArray(int numRowsInBoard, int squareNum) {
 	}
 
 	arrayCoordinates.columns = squareNum;
-	arrayCoordinates.rows = numRowsInBoard;
+	arrayCoordinates.rows = counter;
 	return (arrayCoordinates);
 }
