@@ -1,0 +1,287 @@
+#include <iostream>
+#include <iomanip>
+#include <string>
+#include <locale>
+
+using namespace std;
+
+const int MAX_ARRAY_SIZE = 18;
+const int MIN_ARRAY_SIZE = 8;
+const int MAX_PIECES = 72;
+const int NOPLAYER = 0;
+const int WHITEWINS = 1;
+const int REDWINS = 2;
+const int NOONEWINS = 0;
+const int WHITESOLDIER = 1;
+const int WHITEMULE = 2;
+const int WHITEKING = 3;
+const int REDSOLDIER = 4;
+const int REDMULE = 5;
+const int REDKING = 6;
+const int WHITEPLAYER = 1;
+const int REDPLAYER = 2;
+
+void InitializeBoard(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInBoard);
+void DisplayBoard(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInBoard);
+bool MakeMove(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInBoard, int player, int fromSquareNum, int toSquareNum, bool &jumped);
+
+struct Coordinates {
+	int columns;
+	int rows;
+};
+Coordinates squareToArray(int numRowsInBoard, int squareNum);
+
+int main()
+{
+	int myCMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE] = { 0 };
+
+	int xIndicesMove[MAX_PIECES];	// Declares move arrays
+	int yIndicesMove[MAX_PIECES];	// Describes the checkers that can be moved
+
+	int xIndicesJump[MAX_PIECES];	// Declares jump arrays
+	int yIndicesJump[MAX_PIECES];	// Describes the checkers that can jump opponent's checkers
+
+	int numRowsInBoard = 0;
+
+	int testInt = 0;
+
+	for (int z = 0; z < 3; z++)
+	{
+
+		cout << "Enter the number of squares along each edge of the board\n";
+		cin >> numRowsInBoard;
+		if (!cin.fail())	// Tests if it is an integer
+		{
+			if ((numRowsInBoard >= 8) && (numRowsInBoard <= 18))	// Tests size of board
+			{
+				if ((numRowsInBoard % 2) == 0)	// Tests if it is even
+				{
+					// ***** Continue here if all parameters pass ******
+
+					InitializeBoard(myCMCheckersBoard, numRowsInBoard);
+
+					DisplayBoard(myCMCheckersBoard, numRowsInBoard);
+
+					return 1;
+				}
+				else
+				{
+					cerr << "ERROR: Board size odd.\n";
+				}
+			}
+			else if (numRowsInBoard < 8)	// If it is too small
+			{
+				cerr << "ERROR: Board size too small.\n";
+			}
+			else	// If it is too big
+			{
+				cerr << "ERROR: Board size too large.\n";
+			}
+		}
+		else
+		{
+			cerr << "ERROR: Board size is not an integer.\n";
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		}
+		cout << "8 <= number of squares <= 18\n\n";
+	}
+	cerr << "ERROR: Too many errors entering the size of the board.\n";
+	return 0;
+}
+
+void InitializeBoard(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInBoard) {
+	int CurrentRow = 1;
+	int RowsOnEachSide = (numRowsInBoard / 2); //Amount of rows of each side
+	for (int i = 0; i < numRowsInBoard; i++)
+	{
+		for (int j = 0; j < numRowsInBoard; j++) { //columns of array
+			if ((j % 2 == 0) && (i % 2 == 0))
+			{
+				CMCheckersBoard[i][j] = 0;
+				continue;
+			}
+			else if ((j % 2 == 1) && (i % 2 == 1))
+			{
+				CMCheckersBoard[i][j] = 0;
+				continue;
+			}
+			//	All empty spots are initialized
+			if (CurrentRow == RowsOnEachSide || CurrentRow == RowsOnEachSide + 1)
+			{
+				CMCheckersBoard[i][j] = 0;
+			}
+
+			else if ((CurrentRow == 1) && (j % 2 == 1))	//	White Mule
+			{
+				CMCheckersBoard[i][j] = 2;
+			}
+			else if (CurrentRow < RowsOnEachSide)	//	White Soldier
+			{
+				CMCheckersBoard[i][j] = 1;
+			}
+			else if (CurrentRow == numRowsInBoard)	//	Red Mule
+			{
+				CMCheckersBoard[i][j] = 5;
+			}
+			else	//	Red Soldier
+			{
+				CMCheckersBoard[i][j] = 4;
+			}
+		}
+		CurrentRow++;
+	}
+}
+
+void DisplayBoard(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInBoard) {
+	for (int i = 0; i < numRowsInBoard; i++) {
+		for (int j = 0; j <= numRowsInBoard; j++) {
+			if (j == numRowsInBoard) {
+				cout << endl;
+				break;
+			}
+
+			switch (CMCheckersBoard[i][j])
+			{
+			case 0:
+			{
+				cout << setw(4) << j + (i * numRowsInBoard);
+				continue;
+			}
+			case 1:
+			{
+				cout << setw(4) << "WS";
+				continue;
+			}
+			case 2:
+			{
+				cout << setw(4) << "WM";
+				continue;
+			}
+			case 3:
+			{
+				cout << setw(4) << "WK";
+				continue;
+			}
+			case 4:
+			{
+				cout << setw(4) << "RS";
+				continue;
+			}
+			case 5:
+			{
+				cout << setw(4) << "RM";
+				continue;
+			}
+			case 6:
+			{
+				cout << setw(4) << "RK";
+				continue;
+			}
+			default:
+			{
+				break;
+			}
+			}
+		}
+	}
+}
+
+bool MakeMove(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInBoard, int player, int fromSquareNum, int toSquareNum, bool &jumped) {
+	Coordinates fromSquare = squareToArray(numRowsInBoard, fromSquareNum);
+	Coordinates toSquare = squareToArray(numRowsInBoard, toSquareNum);
+	int ydistance = abs(fromSquare.columns - toSquare.columns);
+	int xdistance = abs(fromSquare.rows - toSquare.rows);
+	/* for testing if it's false or not */
+	int nonabsydistance = fromSquare.columns - toSquare.columns;
+	int nonabsxdistance = fromSquare.rows - toSquare.rows;
+	/* for testing its direction */
+	int temp = 0;
+
+	if (ydistance == 2 && xdistance == 2) {	/* if you try to move 2 squares but there is no piece to jump through*/
+		if (CMCheckersBoard[toSquare.rows][toSquare.columns] == 0) {
+			cout << "Error;  illegal move" << endl;
+			return(false);
+		}
+	}
+
+	else if (ydistance != 1 && xdistance != 1) { /* same thing */
+		cout << "Error; illegal move" << endl;
+		return(false);
+	}
+
+	else if (CMCheckersBoard[toSquare.rows][toSquare.columns] == WHITESOLDIER || CMCheckersBoard[toSquare.rows][toSquare.columns] == WHITEMULE) {
+		if (toSquareNum < fromSquareNum) { /* wrong direction */
+			cout << "Error; illegal move" << endl;
+			return(false);
+		}
+	}
+
+	else if (CMCheckersBoard[toSquare.rows][toSquare.columns] == REDSOLDIER || CMCheckersBoard[toSquare.rows][toSquare.columns] == REDMULE) {
+		if (toSquareNum > fromSquareNum) { /* wrong direction */
+			cout << "Error; illegal move" << endl;
+			return(false);
+		}
+	}
+	
+	if (ydistance == 1 && xdistance == 1) {
+		temp = CMCheckersBoard[toSquare.rows][toSquare.columns]; /* swaps the 2 values */
+		CMCheckersBoard[toSquare.rows][toSquare.columns] = CMCheckersBoard[fromSquare.rows][fromSquare.columns];
+		CMCheckersBoard[fromSquare.rows][fromSquare.columns] = temp;
+	}
+
+	else if (ydistance == 1 && xdistance == numRowsInBoard - 1) {
+		temp = CMCheckersBoard[toSquare.rows][toSquare.columns]; /* swaps the 2 values */
+		CMCheckersBoard[toSquare.rows][toSquare.columns] = CMCheckersBoard[fromSquare.rows][fromSquare.columns];
+		CMCheckersBoard[fromSquare.rows][fromSquare.columns] = temp;
+	}
+
+	else if (ydistance != 1 && xdistance != 1) {
+		if (CMCheckersBoard[toSquare.rows][toSquare.columns] != 0) {
+			if (nonabsxdistance > 0 && nonabsydistance > 0) {
+				/* DO THIS PART */
+			}
+			jumped = true;
+		}
+	}
+
+	if (CMCheckersBoard[toSquare.rows][toSquare.columns] == WHITESOLDIER) {
+		if (toSquare.rows = 1) { /* if soldier gets to the end, turn to king */
+			CMCheckersBoard[toSquare.rows][toSquare.columns] == WHITEKING;
+		}
+	}
+
+	if (CMCheckersBoard[toSquare.rows][toSquare.columns] == WHITEMULE) {
+		if (toSquare.rows = 1) { /* if mule gets to the end, you lose */
+			CMCheckersBoard[toSquare.rows][toSquare.columns] == WHITEKING;
+			cout << "White has created a Mule King, Red wins the game" << endl;
+			return(true);
+		}
+	}
+
+	if (CMCheckersBoard[toSquare.rows][toSquare.columns] == REDSOLDIER) {
+		if (toSquare.rows = MAX_ARRAY_SIZE) { /* if soldier gets to the end, turn to king */
+			CMCheckersBoard[toSquare.rows][toSquare.columns] == REDKING;
+		}
+	}
+
+	if (CMCheckersBoard[toSquare.rows][toSquare.columns] == REDMULE) {
+		if (toSquare.rows = MAX_ARRAY_SIZE) { /* if mule gets to the end, you lose */
+			CMCheckersBoard[toSquare.rows][toSquare.columns] == REDKING;
+			cout << "Red has created a Mule King, White wins the game" << endl;
+			return(true);
+		}
+	}
+}
+	Coordinates squareToArray(int numRowsInBoard, int squareNum); {
+	int counter = 0;
+	Coordinates arrayCoordinates;
+	while (numRowsInBoard <= squareNum) {
+		squareNum -= numRowsInBoard;
+		counter++;
+	}
+
+	arrayCoordinates.columns = squareNum;
+	arrayCoordinates.rows = counter;
+	return (arrayCoordinates);
+}
