@@ -3,43 +3,53 @@ bool MakeMove(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsIn
 	Coordinates toSquare = squareToArray(numRowsInBoard, toSquareNum);
 	int ydistance = abs(fromSquare(column) - toSquare(column));
 	int xdistance = abs(fromSquare(row) - toSquare(row));
+
 	if (ydistance == 1 && xdistance == 1) {
 		return(true);
 	}
+
 	if (ydistance == 1 && xdistance == numRowsInBoard - 1) {
 		return(true);
 	}
+
 	if (ydistance == 2 && xdistance == 2 && CMCheckersBoard[toSquare(row)][toSquare(column)] != 0) {
 		cout << "Error;  illegal move" << endl;
 		return(false);
 	}
+
 	else if (ydistance != 1 && xdistance != 1) {
 		cout << "Error; illegal move" << endl;
 		return(false);
 	}
+
 	else if ((CMCheckersBoard[toSquare(row)][toSquare(column)] == WHITESOLDIER || CMCheckersBoard[toSquare(row)][toSquare(column)] == WHITEMULE) && (toSquareNum < fromSquareNum)) {
 		cout << "Error; illegal move" << endl;
 		return(false);
 	}
+
 	else if ((CMCheckersBoard[toSquare(row)][toSquare(column)] == REDSOLDIER || CMCheckersBoard[toSquare(row)][toSquare(column)] == REDMULE) && (toSquareNum > fromSquareNum)) {
 		cout << "Error; illegal move" << endl;
 		return(false);
 	}
+
 	CMCheckersBoard[toSquare(row)][toSquare(column)] = CMCheckersBoard[fromSquare(row)][fromSquare(column)];
 	CMCheckersBoard[fromSquare(row)][fromSquare(column)] = 0;
 
 	if (CMCheckersBoard[toSquare(row)][toSquare(column)] == WHITESOLDIER && toSquare(row) = 1) {
 		CMCheckersBoard[toSquare(row)][toSquare(column)] == WHITEKING;
 	}
+
 	if (CMCheckersBoard[toSquare(row)][toSquare(column)] == WHITEMULE && toSquare(row) = 1) {
 		CMCheckersBoard[toSquare(row)][toSquare(column)] == WHITEKING;
 		cout << "White has created a Mule King, Red wins the game" << endl;
 		return(true);
 	}
-	if (CMCheckersBoard[toSquare(row)][toSquare(column)] == REDSOLDIER && toSquare(MAX_ARRAY_SIZE) = 1) {
+
+	if (CMCheckersBoard[toSquare(row)][toSquare(column)] == REDSOLDIER && toSquare(row) = MAX_ARRAY_SIZE) {
 		CMCheckersBoard[toSquare(row)][toSquare(column)] == REDKING;
 	}
-	if (CMCheckersBoard[toSquare(row)][toSquare(column)] == REDMULE && toSquare(MAX_ARRAY_SIZE) = 1) {
+
+	if (CMCheckersBoard[toSquare(row)][toSquare(column)] == REDMULE && toSquare(row) = MAX_ARRAY_SIZE) {
 		CMCheckersBoard[toSquare(row)][toSquare(column)] == REDKING;
 		cout << "Red has created a Mule King, White wins the game" << endl;
 		return(true);
@@ -52,6 +62,7 @@ Coordinates squareToArray(int numRowsInBoard, int squareNum) {
 		squareNum -= numRowsInBoard;
 		counter++;
 	}
+
 	arrayCoordinates.columns = squareNum;
 	arrayCoordinates.rows = numRowsInBoard;
 	return (arrayCoordinates);
