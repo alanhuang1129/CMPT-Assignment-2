@@ -236,11 +236,29 @@ bool MakeMove(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsIn
 		CMCheckersBoard[fromSquare.rows][fromSquare.columns] = temp;
 	}
 
-	else if (ydistance != 1 && xdistance != 1) {
+	else if (ydistance == 2 && xdistance == 2) {
 		if (CMCheckersBoard[toSquare.rows][toSquare.columns] != 0) {
 			if (nonabsxdistance > 0 && nonabsydistance > 0) {
 				/* DO THIS PART */ // JUMP HERE
 				CMCheckersBoard[(fromSquare.rows) + 1][(fromSquare.columns) + 1] = NOPLAYER; //Taking out the enemy checker
+				temp = CMCheckersBoard[fromSquare.rows][fromSquare.columns]; //Swap
+				CMCheckersBoard[fromSquare.rows][fromSquare.columns] = CMCheckersBoard[toSquare.rows][toSquare.columns];
+				CMCheckersBoard[toSquare.rows][toSquare.columns] = temp;
+			}
+			if (nonabsxdistance < 0 && nonabsydistance > 0) {
+				CMCheckersBoard[(fromSquare.rows) + 1][(fromSquare.columns) - 1] = NOPLAYER; //Taking out the enemy checker
+				temp = CMCheckersBoard[fromSquare.rows][fromSquare.columns]; //Swap
+				CMCheckersBoard[fromSquare.rows][fromSquare.columns] = CMCheckersBoard[toSquare.rows][toSquare.columns];
+				CMCheckersBoard[toSquare.rows][toSquare.columns] = temp;
+			}
+			if (nonabsxdistance < 0 && nonabsydistance < 0) {
+				CMCheckersBoard[(fromSquare.rows) - 1][(fromSquare.columns) - 1] = NOPLAYER; //Taking out the enemy checker
+				temp = CMCheckersBoard[fromSquare.rows][fromSquare.columns]; //Swap
+				CMCheckersBoard[fromSquare.rows][fromSquare.columns] = CMCheckersBoard[toSquare.rows][toSquare.columns];
+				CMCheckersBoard[toSquare.rows][toSquare.columns] = temp;
+			}
+			if (nonabsxdistance > 0 && nonabsydistance < 0) {
+				CMCheckersBoard[(fromSquare.rows) - 1][(fromSquare.columns) + 1] = NOPLAYER; //Taking out the enemy checker
 				temp = CMCheckersBoard[fromSquare.rows][fromSquare.columns]; //Swap
 				CMCheckersBoard[fromSquare.rows][fromSquare.columns] = CMCheckersBoard[toSquare.rows][toSquare.columns];
 				CMCheckersBoard[toSquare.rows][toSquare.columns] = temp;
