@@ -1,7 +1,7 @@
 #include <iostream>
 #include <iomanip>
 #include <string>
-#include <locale>
+#include <cmath>
 
 using namespace std;
 
@@ -23,10 +23,11 @@ const int REDPLAYER = 2;
 
 void InitializeBoard(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInBoard);
 void DisplayBoard(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInBoard);
-//bool IsJump(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInBoard, int player, int xLoc, int yLoc);
-//bool IsMove1Square(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInBoard, int player, int xLoc, int yLoc);
+bool IsJump(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInBoard, int player, int xLoc, int yLoc);
+bool IsMove1Square(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInBoard, int player, int xLoc, int yLoc);
 int CountMove1Squares(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInBoard, int player, int xLocArray[], int yLocArray[]);
 int CountJumps(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInBoard, int player, int xLocArray[], int yLocArray[]);
+bool MakeMove(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInBoard, int player, int fromSquareNum, int toSquareNum, bool &jumped, );
 //bool CheckList(int inArray1[], int inArray2[], int xIndex, int yIndex);
 //bool CheckWin(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInBoard);
 
@@ -35,6 +36,8 @@ struct Coordinates
 	int columns;
 	int rows;
 };
+
+int checkerWhichPlayer(int checkerValue);
 
 int main()
 {
@@ -90,9 +93,21 @@ int main()
 								if ((squareNum >= 0) && (squareNum <= (numRowsInBoard * numRowsInBoard)))	//	Tests if it is within the board
 								{
 									Coordinates squareToArray(int numRowsInBoard, int squareNum);
-									
-									if (myCMCheckersBoard[i][j] == 4)	//	Tests if it is an enemy checker
+
+									if (player == 1)	//	Tests if it is an enemy checker
 									{
+										if ((myCMCheckersBoard[fromSquare.row][fromSquare.column] == 4 || (myCMCheckersBoard[fromSquare.row][fromSquare.column] == 5) || myCMCheckersBoard[fromSquare.row][fromSquare.column] == 6))
+										{
+											cerr << "ERROR: That square contains an opponent’s checker." << endl << "Try again";
+										}
+									}
+									else if (player == 2)
+									{
+										if ((myCMCheckersBoard[fromSquare.row][fromSquare.column] == 1 || (myCMCheckersBoard[fromSquare.row][fromSquare.column] == 2) || myCMCheckersBoard[fromSquare.row][fromSquare.column] == 3))
+										{
+											cerr << "ERROR: That square contains an opponent’s checker." << endl << "Try again";
+										}
+									}
 										if ()	//	Tests if it is empty
 										{
 											
@@ -783,8 +798,7 @@ Coordinates squareToArray(int numRowsInBoard, int squareNum)
 	return (arrayCoordinates);
 }
 
-bool MakeMove(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInBoard, int player, int fromSquareNum, int toSquareNum, bool &jumped, int* p)
-{
+bool MakeMove(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInBoard, int player, int fromSquareNum, int toSquareNum, bool &jumped) {
 	Coordinates fromSquare = squareToArray(numRowsInBoard, fromSquareNum);
 	Coordinates toSquare = squareToArray(numRowsInBoard, toSquareNum);
 	int ydistance = abs(fromSquare.columns - toSquare.columns);
@@ -832,63 +846,157 @@ bool MakeMove(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsIn
 		CMCheckersBoard[toSquare.rows][toSquare.columns] = CMCheckersBoard[fromSquare.rows][fromSquare.columns];
 		CMCheckersBoard[fromSquare.rows][fromSquare.columns] = temp;
 	}
-
+	//Removing jumped checkers
 	else if (ydistance == 2 && xdistance == 2) {
 		if (CMCheckersBoard[toSquare.rows][toSquare.columns] != 0) {
-			if (nonabsxdistance > 0 && nonabsydistance > 0) {
-				/* DO THIS PART */ // JUMP HERE
-				CMCheckersBoard[(fromSquare.rows) + 1][(fromSquare.columns) + 1] = NOPLAYER; //Taking out the enemy checker
-				temp = CMCheckersBoard[fromSquare.rows][fromSquare.columns]; //Swap
-				CMCheckersBoard[fromSquare.rows][fromSquare.columns] = CMCheckersBoard[toSquare.rows][toSquare.columns];
-				CMCheckersBoard[toSquare.rows][toSquare.columns] = temp;
+			//White soldier and White mule
+			if (CMCheckersBoard[fromSquare.rows][fromSquare.columns] == 1 || CMCheckersBoard[fromSquare.rows][fromSquare.columns] == 2) {
+				if (nonabsxdistance > 0 && nonabsydistance > 0) {
+					CMCheckersBoard[(fromSquare.rows) + 1][(fromSquare.columns) + 1] = NOPLAYER; //Taking out the enemy checker
+					temp = CMCheckersBoard[fromSquare.rows][fromSquare.columns]; //Swap
+					CMCheckersBoard[fromSquare.rows][fromSquare.columns] = CMCheckersBoard[toSquare.rows][toSquare.columns];
+					CMCheckersBoard[toSquare.rows][toSquare.columns] = temp;
+					jumped = true;
+				}
+				else if (nonabsxdistance < 0 && nonabsydistance > 0) {
+					CMCheckersBoard[(fromSquare.rows) + 1][(fromSquare.columns) - 1] = NOPLAYER; //Taking out the enemy checker
+					temp = CMCheckersBoard[fromSquare.rows][fromSquare.columns]; //Swap
+					CMCheckersBoard[fromSquare.rows][fromSquare.columns] = CMCheckersBoard[toSquare.rows][toSquare.columns];
+					CMCheckersBoard[toSquare.rows][toSquare.columns] = temp;
+					jumped = true;
+				}
 			}
-			if (nonabsxdistance < 0 && nonabsydistance > 0) {
-				CMCheckersBoard[(fromSquare.rows) + 1][(fromSquare.columns) - 1] = NOPLAYER; //Taking out the enemy checker
-				temp = CMCheckersBoard[fromSquare.rows][fromSquare.columns]; //Swap
-				CMCheckersBoard[fromSquare.rows][fromSquare.columns] = CMCheckersBoard[toSquare.rows][toSquare.columns];
-				CMCheckersBoard[toSquare.rows][toSquare.columns] = temp;
+			//White king
+			else if (CMCheckersBoard[fromSquare.rows][fromSquare.columns] == 3) {
+				if (nonabsxdistance > 0 && nonabsydistance > 0) {
+					CMCheckersBoard[(fromSquare.rows) + 1][(fromSquare.columns) + 1] = NOPLAYER; //Taking out the enemy checker
+					temp = CMCheckersBoard[fromSquare.rows][fromSquare.columns]; //Swap
+					CMCheckersBoard[fromSquare.rows][fromSquare.columns] = CMCheckersBoard[toSquare.rows][toSquare.columns];
+					CMCheckersBoard[toSquare.rows][toSquare.columns] = temp;
+					jumped = true;
+				}
+				else if (nonabsxdistance < 0 && nonabsydistance > 0) {
+					CMCheckersBoard[(fromSquare.rows) + 1][(fromSquare.columns) - 1] = NOPLAYER; //Taking out the enemy checker
+					temp = CMCheckersBoard[fromSquare.rows][fromSquare.columns]; //Swap
+					CMCheckersBoard[fromSquare.rows][fromSquare.columns] = CMCheckersBoard[toSquare.rows][toSquare.columns];
+					CMCheckersBoard[toSquare.rows][toSquare.columns] = temp;
+					jumped = true;
+				}
+				else if (nonabsxdistance < 0 && nonabsydistance < 0) {
+					CMCheckersBoard[(fromSquare.rows) - 1][(fromSquare.columns) - 1] = NOPLAYER; //Taking out the enemy checker
+					temp = CMCheckersBoard[fromSquare.rows][fromSquare.columns]; //Swap
+					CMCheckersBoard[fromSquare.rows][fromSquare.columns] = CMCheckersBoard[toSquare.rows][toSquare.columns];
+					CMCheckersBoard[toSquare.rows][toSquare.columns] = temp;
+					jumped = true;
+				}
+				else if (nonabsxdistance > 0 && nonabsydistance < 0) {
+					CMCheckersBoard[(fromSquare.rows) - 1][(fromSquare.columns) + 1] = NOPLAYER; //Taking out the enemy checker
+					temp = CMCheckersBoard[fromSquare.rows][fromSquare.columns]; //Swap
+					CMCheckersBoard[fromSquare.rows][fromSquare.columns] = CMCheckersBoard[toSquare.rows][toSquare.columns];
+					CMCheckersBoard[toSquare.rows][toSquare.columns] = temp;
+					jumped = true;
+				}
 			}
-			if (nonabsxdistance < 0 && nonabsydistance < 0) {
-				CMCheckersBoard[(fromSquare.rows) - 1][(fromSquare.columns) - 1] = NOPLAYER; //Taking out the enemy checker
-				temp = CMCheckersBoard[fromSquare.rows][fromSquare.columns]; //Swap
-				CMCheckersBoard[fromSquare.rows][fromSquare.columns] = CMCheckersBoard[toSquare.rows][toSquare.columns];
-				CMCheckersBoard[toSquare.rows][toSquare.columns] = temp;
+			//Red soldier and Red mule
+			else if (CMCheckersBoard[fromSquare.rows][fromSquare.columns] == 4 || CMCheckersBoard[fromSquare.rows][fromSquare.columns] == 5) {
+				if (nonabsxdistance > 0 && nonabsydistance > 0) {
+					CMCheckersBoard[(fromSquare.rows) - 1][(fromSquare.columns) + 1] = NOPLAYER; //Taking out the enemy checker
+					temp = CMCheckersBoard[fromSquare.rows][fromSquare.columns]; //Swap
+					CMCheckersBoard[fromSquare.rows][fromSquare.columns] = CMCheckersBoard[toSquare.rows][toSquare.columns];
+					CMCheckersBoard[toSquare.rows][toSquare.columns] = temp;
+					jumped = true;
+				}
+				else if (nonabsxdistance < 0 && nonabsydistance > 0) {
+					CMCheckersBoard[(fromSquare.rows) - 1][(fromSquare.columns) - 1] = NOPLAYER; //Taking out the enemy checker
+					temp = CMCheckersBoard[fromSquare.rows][fromSquare.columns]; //Swap
+					CMCheckersBoard[fromSquare.rows][fromSquare.columns] = CMCheckersBoard[toSquare.rows][toSquare.columns];
+					CMCheckersBoard[toSquare.rows][toSquare.columns] = temp;
+					jumped = true;
+				}
 			}
-			if (nonabsxdistance > 0 && nonabsydistance < 0) {
-				CMCheckersBoard[(fromSquare.rows) - 1][(fromSquare.columns) + 1] = NOPLAYER; //Taking out the enemy checker
-				temp = CMCheckersBoard[fromSquare.rows][fromSquare.columns]; //Swap
-				CMCheckersBoard[fromSquare.rows][fromSquare.columns] = CMCheckersBoard[toSquare.rows][toSquare.columns];
-				CMCheckersBoard[toSquare.rows][toSquare.columns] = temp;
+			//Red king
+			else if (CMCheckersBoard[fromSquare.rows][fromSquare.columns] == 6) {
+				if (nonabsxdistance > 0 && nonabsydistance > 0) {
+					CMCheckersBoard[(fromSquare.rows) + 1][(fromSquare.columns) + 1] = NOPLAYER; //Taking out the enemy checker
+					temp = CMCheckersBoard[fromSquare.rows][fromSquare.columns]; //Swap
+					CMCheckersBoard[fromSquare.rows][fromSquare.columns] = CMCheckersBoard[toSquare.rows][toSquare.columns];
+					CMCheckersBoard[toSquare.rows][toSquare.columns] = temp;
+					jumped = true;
+				}
+				else if (nonabsxdistance < 0 && nonabsydistance > 0) {
+					CMCheckersBoard[(fromSquare.rows) + 1][(fromSquare.columns) - 1] = NOPLAYER; //Taking out the enemy checker
+					temp = CMCheckersBoard[fromSquare.rows][fromSquare.columns]; //Swap
+					CMCheckersBoard[fromSquare.rows][fromSquare.columns] = CMCheckersBoard[toSquare.rows][toSquare.columns];
+					CMCheckersBoard[toSquare.rows][toSquare.columns] = temp;
+					jumped = true;
+				}
+				else if (nonabsxdistance < 0 && nonabsydistance < 0) {
+					CMCheckersBoard[(fromSquare.rows) - 1][(fromSquare.columns) - 1] = NOPLAYER; //Taking out the enemy checker
+					temp = CMCheckersBoard[fromSquare.rows][fromSquare.columns]; //Swap
+					CMCheckersBoard[fromSquare.rows][fromSquare.columns] = CMCheckersBoard[toSquare.rows][toSquare.columns];
+					CMCheckersBoard[toSquare.rows][toSquare.columns] = temp;
+					jumped = true;
+				}
+				else if (nonabsxdistance > 0 && nonabsydistance < 0) {
+					CMCheckersBoard[(fromSquare.rows) - 1][(fromSquare.columns) + 1] = NOPLAYER; //Taking out the enemy checker
+					temp = CMCheckersBoard[fromSquare.rows][fromSquare.columns]; //Swap
+					CMCheckersBoard[fromSquare.rows][fromSquare.columns] = CMCheckersBoard[toSquare.rows][toSquare.columns];
+					CMCheckersBoard[toSquare.rows][toSquare.columns] = temp;
+					jumped = true;
+				}
 			}
-			jumped = true;
 		}
 	}
 
 	if (CMCheckersBoard[toSquare.rows][toSquare.columns] == WHITESOLDIER) {
-		if (toSquare.rows == 1) { /* if soldier gets to the end, turn to king */
-			CMCheckersBoard[toSquare.rows][toSquare.columns] = WHITEKING;
+		if (toSquare.rows = 1) { /* if soldier gets to the end, turn to king */
+			CMCheckersBoard[toSquare.rows][toSquare.columns] == WHITEKING;
 		}
 	}
 
 	if (CMCheckersBoard[toSquare.rows][toSquare.columns] == WHITEMULE) {
-		if (toSquare.rows == 1) { /* if mule gets to the end, you lose */
-			CMCheckersBoard[toSquare.rows][toSquare.columns] = WHITEKING;
+		if (toSquare.rows = 1) { /* if mule gets to the end, you lose */
+			CMCheckersBoard[toSquare.rows][toSquare.columns] == WHITEKING;
 			cout << "White has created a Mule King, Red wins the game" << endl;
 			return(true);
 		}
 	}
 
 	if (CMCheckersBoard[toSquare.rows][toSquare.columns] == REDSOLDIER) {
-		if (toSquare.rows == MAX_ARRAY_SIZE) { /* if soldier gets to the end, turn to king */
-			CMCheckersBoard[toSquare.rows][toSquare.columns] = REDKING;
+		if (toSquare.rows = MAX_ARRAY_SIZE) { /* if soldier gets to the end, turn to king */
+			CMCheckersBoard[toSquare.rows][toSquare.columns] == REDKING;
 		}
 	}
 
 	if (CMCheckersBoard[toSquare.rows][toSquare.columns] == REDMULE) {
-		if (toSquare.rows == MAX_ARRAY_SIZE) { /* if mule gets to the end, you lose */
-			CMCheckersBoard[toSquare.rows][toSquare.columns] = REDKING;
+		if (toSquare.rows = MAX_ARRAY_SIZE) { /* if mule gets to the end, you lose */
+			CMCheckersBoard[toSquare.rows][toSquare.columns] == REDKING;
 			cout << "Red has created a Mule King, White wins the game" << endl;
 			return(true);
 		}
+	}
+}
+Coordinates squareToArray(int numRowsInBoard, int squareNum) {
+	int counter = 0;
+	Coordinates arrayCoordinates;
+	while (numRowsInBoard <= squareNum) {
+		squareNum -= numRowsInBoard;
+		counter++;
+	}
+
+	arrayCoordinates.columns = squareNum;
+	arrayCoordinates.rows = counter;
+	return (arrayCoordinates);
+}
+
+int checkerWhichPlayer(int checkerValue) {
+	if (checkerValue == 1 || checkerValue == 2 || checkerValue == 3) {
+		return(1);
+	}
+	if (checkerValue == 4 || checkerValue == 5 || checkerValue == 6) {
+		return(2);
+	}
+	else {
+		return(3);
 	}
 }
