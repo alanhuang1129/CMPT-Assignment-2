@@ -1,0 +1,894 @@
+#include <iostream>
+#include <iomanip>
+#include <string>
+#include <locale>
+
+using namespace std;
+
+const int MAX_ARRAY_SIZE = 18;
+const int MIN_ARRAY_SIZE = 8;
+const int MAX_PIECES = 72;
+const int NOPLAYER = 0;
+const int WHITEWINS = 1;
+const int REDWINS = 2;
+const int NOONEWINS = 0;
+const int WHITESOLDIER = 1;
+const int WHITEMULE = 2;
+const int WHITEKING = 3;
+const int REDSOLDIER = 4;
+const int REDMULE = 5;
+const int REDKING = 6;
+const int WHITEPLAYER = 1;
+const int REDPLAYER = 2;
+
+void InitializeBoard(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInBoard);
+void DisplayBoard(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInBoard);
+//bool IsJump(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInBoard, int player, int xLoc, int yLoc);
+//bool IsMove1Square(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInBoard, int player, int xLoc, int yLoc);
+int CountMove1Squares(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInBoard, int player, int xLocArray[], int yLocArray[]);
+int CountJumps(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInBoard, int player, int xLocArray[], int yLocArray[]);
+//bool CheckList(int inArray1[], int inArray2[], int xIndex, int yIndex);
+//bool CheckWin(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInBoard);
+
+struct Coordinates
+{
+	int columns;
+	int rows;
+};
+
+int main()
+{
+	int myCMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE] = { 0 };
+
+	int xIndicesMove[MAX_PIECES];	// Declares move arrays
+	int yIndicesMove[MAX_PIECES];	// Describes the checkers that can be moved
+
+	int xIndicesJump[MAX_PIECES];	// Declares jump arrays
+	int yIndicesJump[MAX_PIECES];	// Describes the checkers that can jump opponent's checkers
+
+	int numRowsInBoard = 0;
+
+	int testInt = 0;
+
+	char closeGame;
+	int squareNum;
+
+	for (int z = 0; z < 3; z++)
+	{
+		
+		cout << "Enter the number of squares along each edge of the board\n";
+		cin >> numRowsInBoard;
+		if (!cin.fail())	// Tests if it is an integer
+		{
+			if ((numRowsInBoard >= 8) && (numRowsInBoard <= 18))	// Tests size of board
+			{
+				if ((numRowsInBoard % 2) == 0)	// Tests if it is even
+				{
+					// ***** Continue here if all parameters pass ****** //
+
+					InitializeBoard(myCMCheckersBoard, numRowsInBoard);
+									
+					DisplayBoard(myCMCheckersBoard, numRowsInBoard);
+					
+					CountJumps(myCMCheckersBoard, numRowsInBoard, WHITEPLAYER, xIndicesJump, yIndicesJump);					
+					CountMove1Squares(myCMCheckersBoard, numRowsInBoard, WHITEPLAYER, xIndicesMove, yIndicesMove);
+					if ((CountJumps == 0) && (CountMove1Squares == 0))
+					{
+						cout << "White is unable to move.\nGAME OVER, Red has won.\nEnter any character to close the game.\n";
+						cin >> closeGame;
+						return 3;
+					}
+					else
+					{
+						for (int h = 1; h > 0; h++)
+						{
+							cout << "\nWhite takes a turn\n";
+							cout << "Enter the square number of the checker you want to move\n";
+							cin >> squareNum;
+							if (!cin.fail())	//	Tests if it is an integer
+							{
+								if ((squareNum >= 0) && (squareNum <= (numRowsInBoard * numRowsInBoard)))	//	Tests if it is within the board
+								{
+									Coordinates squareToArray(int numRowsInBoard, int squareNum);
+									
+									if (myCMCheckersBoard[i][j] == 4)	//	Tests if it is an enemy checker
+									{
+										if ()	//	Tests if it is empty
+										{
+											
+											IsJump(myCMCheckersBoard, numRowsInBoard, WHITEPLAYER, int xLoc, int yLoc);
+											if ()	//	Tests if you can't jump with the selected checker, but can with another
+											{
+												if ()
+											}
+											else
+											{
+												cerr << "ERROR: You can jump with another checker, you may not move your chosen checker.\nYou can jump using checkers on the following squares: " << /*squarenums*/ << "\nTry again\n";
+											}
+										}
+										else
+										{
+											cerr << "ERROR: That square is empty.\nTry again\n";
+											cin.clear();
+											cin.ignore(numeric_limits<streamsize>::max(), '\n');
+										}
+									}
+									else
+									{
+										cerr << "ERROR: That square contains an opponent’s checker.\nTry again\n";
+										cin.clear();
+										cin.ignore(numeric_limits<streamsize>::max(), '\n');
+									}
+								}
+								else
+								{
+									cerr << "ERROR: That square is not on the board.\nTry again\n";
+									cin.clear();
+									cin.ignore(numeric_limits<streamsize>::max(), '\n');
+								}
+							}
+							else
+							{
+								cerr << "ERROR: You did not enter an integer.\nTry again\n";
+								cin.clear();
+								cin.ignore(numeric_limits<streamsize>::max(), '\n');
+							}
+						}
+					}
+					
+					CountMove1Squares(myCMCheckersBoard, numRowsInBoard, REDPLAYER, xIndicesMove, yIndicesMove);
+					CountJumps(myCMCheckersBoard, numRowsInBoard, REDPLAYER, xIndicesJump, yIndicesJump);
+					if ((CountJumps == 0) && (CountMove1Squares == 0))
+					{
+						cout << "Red is unable to move\nGAME OVER, White has won\nEnter any character to close the game\n";
+						cin >> closeGame;
+						return 4;
+					}
+					else
+					{
+						cout << "\nRed takes a turn\n";
+					}
+
+
+					return 1;
+				}
+				else
+				{
+					cerr << "ERROR: Board size odd.\n";
+				}
+			}
+			else if (numRowsInBoard < 8)	// If it is too small
+			{
+				cerr << "ERROR: Board size too small.\n";
+			}
+			else	// If it is too big
+			{
+				cerr << "ERROR: Board size too large.\n";
+			}
+		}
+		else
+		{
+			cerr << "ERROR: Board size is not an integer.\n";
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		}
+		cout << "8 <= number of squares <= 18\n\n";
+	}
+	cerr << "ERROR: Too many errors entering the size of the board.\n";
+	return 0;
+}
+
+void InitializeBoard(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInBoard) {
+	int CurrentRow = 1;
+	int RowsOnEachSide = (numRowsInBoard / 2); //Amount of rows of each side
+	for (int i = 0; i < numRowsInBoard; i++)
+	{
+		for (int j = 0; j < numRowsInBoard; j++) { //columns of array
+			if ((j % 2 == 0) && (i % 2 == 0))
+			{
+				CMCheckersBoard[i][j] = 0;
+				continue;
+			}
+			else if ((j % 2 == 1) && (i % 2 == 1))
+			{	
+				CMCheckersBoard[i][j] = 0;
+				continue;
+			}
+			//	All empty spots are initialized
+
+			if ((CurrentRow == 1) && (j%2 == 1))	//	White Mule
+			{
+				CMCheckersBoard[i][j] = 2;
+			}
+			else if (CurrentRow == numRowsInBoard)	//	Red Mule
+			{
+				CMCheckersBoard[i][j] = 5;
+			}
+			else if (CurrentRow == RowsOnEachSide || CurrentRow == RowsOnEachSide + 1)
+			{
+				CMCheckersBoard[i][j] = 0;
+			}
+			else if (CurrentRow < RowsOnEachSide)	//	White Soldier
+			{
+				CMCheckersBoard[i][j] = 1;
+			}
+			else	//	Red Soldier
+			{
+				CMCheckersBoard[i][j] = 4;
+			}
+		}
+		CurrentRow++;
+	}
+}
+
+void DisplayBoard(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInBoard) {
+	for (int i = 0; i < numRowsInBoard; i++) {
+		for (int j = 0; j <= numRowsInBoard; j++) {
+			if (j == numRowsInBoard) {
+				cout << endl;
+				break;
+			}
+
+			switch (CMCheckersBoard[i][j])
+			{
+				case 0:
+				{
+					cout << setw(4) << j + (i * numRowsInBoard);
+					continue;
+				}
+				case 1:
+				{
+					cout << setw(4) << "WS";
+					continue;
+				}
+				case 2:
+				{
+					cout << setw(4) << "WM";
+					continue;
+				}
+				case 3:
+				{
+					cout << setw(4) << "WK";
+					continue;
+				}
+				case 4:
+				{
+					cout << setw(4) << "RS";
+					continue;
+				}
+				case 5:
+				{
+					cout << setw(4) << "RM";
+					continue;
+				}
+				case 6:
+				{
+					cout << setw(4) << "RK";
+					continue;
+				}
+				default:
+				{
+					break;
+				}
+			}
+		}
+	}
+}
+
+bool IsJump(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInBoard, int player, int xLoc, int yLoc) {
+	if (player == 1) {
+		if (CMCheckersBoard[yLoc][xLoc] == 1 || CMCheckersBoard[yLoc][xLoc] == 2) {
+			//Left side of board
+			if (xLoc == 0) {
+				//Check for jump on red checkers - Diagonal left (white)
+				if (CMCheckersBoard[yLoc + 1][numRowsInBoard] == 4 || CMCheckersBoard[yLoc + 1][numRowsInBoard] == 5 || CMCheckersBoard[yLoc + 1][numRowsInBoard] == 6) {
+					//Check if the jump space is blocked
+					if (CMCheckersBoard[yLoc + 2][numRowsInBoard - 1] == 0)
+						return true;
+				}
+				//Check for jump on red checkers - Diagonal right (white)
+				if (CMCheckersBoard[yLoc + 1][xLoc + 1] == 4 || CMCheckersBoard[yLoc + 1][xLoc + 1] == 5 || CMCheckersBoard[yLoc + 1][xLoc + 1] == 6) {
+					//Check if the jump space is blocked
+					if (CMCheckersBoard[yLoc + 2][xLoc + 2] == 0)
+						return true;
+				}
+				else
+					return false;
+			}
+			//Right side of board
+			if (xLoc == numRowsInBoard) {
+				//Check for jump on red checkers - Diagonal left (white)
+				if (CMCheckersBoard[yLoc + 1][numRowsInBoard - 1] == 4 || CMCheckersBoard[yLoc + 1][numRowsInBoard - 1] == 5 || CMCheckersBoard[yLoc + 1][numRowsInBoard - 1] == 6) {
+					//Check if the jump space is blocked
+					if (CMCheckersBoard[yLoc + 2][numRowsInBoard - 2] == 0)
+						return true;
+				}
+				//Check for jump on red checkers - Diagonal right (white)
+				if (CMCheckersBoard[yLoc + 1][0] == 4 || CMCheckersBoard[yLoc + 1][0] == 5 || CMCheckersBoard[yLoc + 1][0] == 6) {
+					//Check if the jump space is blocked
+					if (CMCheckersBoard[yLoc + 2][1] == 0)
+						return true;
+				}
+				else
+					return false;
+			}
+			//Middle section of board
+			else {
+				//Check for jump on red checkers - Diagonal left (white)
+				if (CMCheckersBoard[yLoc + 1][xLoc - 1] == 4 || CMCheckersBoard[yLoc + 1][xLoc - 1] == 5 || CMCheckersBoard[yLoc + 1][xLoc - 1] == 6) {
+					//Check if the jump space is blocked
+					if (CMCheckersBoard[yLoc + 2][xLoc - 2] == 0)
+						return true;
+				}
+				//Check for jump on red checkers - Diagonal right (white)
+				if (CMCheckersBoard[yLoc + 1][xLoc + 1] == 4 || CMCheckersBoard[yLoc + 1][xLoc + 1] == 5 || CMCheckersBoard[yLoc + 1][xLoc + 1] == 6) {
+					//Check if the jump space is blocked
+					if (CMCheckersBoard[yLoc + 2][xLoc + 2] == 0)
+						return true;
+				}
+				else
+					return false;
+			}
+		}
+	}
+
+	//Test white king
+	if (CMCheckersBoard[yLoc][xLoc] == 3) {
+
+		//Left side of board
+		if (xLoc == 0) {
+			//Check for jump on red checkers - Diagonal left (white) - with king moves
+			if (CMCheckersBoard[yLoc + 1][numRowsInBoard] == 4 || CMCheckersBoard[yLoc + 1][numRowsInBoard] == 5 || CMCheckersBoard[yLoc + 1][numRowsInBoard] == 6) {
+				//Check if the jump space is blocked
+				if (CMCheckersBoard[yLoc + 2][numRowsInBoard - 1] == 0)
+					return true;
+			}
+			//King moves
+			if (CMCheckersBoard[yLoc - 1][numRowsInBoard] == 4 || CMCheckersBoard[yLoc - 1][numRowsInBoard] == 5 || CMCheckersBoard[yLoc - 1][numRowsInBoard] == 6) {
+				//Check if the jump space is blocked
+				if (CMCheckersBoard[yLoc - 2][numRowsInBoard - 1] == 0)
+					return true;
+			}
+			//Check for jump on red checkers - Diagonal right (white) - with king moves
+			if (CMCheckersBoard[yLoc + 1][xLoc + 1] == 4 || CMCheckersBoard[yLoc + 1][xLoc + 1] == 5 || CMCheckersBoard[yLoc + 1][xLoc + 1] == 6) {
+				//Check if the jump space is blocked
+				if (CMCheckersBoard[yLoc + 2][xLoc + 2] == 0)
+					return true;
+			}
+			//King moves
+			if (CMCheckersBoard[yLoc - 1][xLoc + 1] == 4 || CMCheckersBoard[yLoc - 1][xLoc + 1] == 5 || CMCheckersBoard[yLoc - 1][xLoc + 1] == 6) {
+				//Check if the jump space is blocked
+				if (CMCheckersBoard[yLoc - 2][xLoc + 2] == 0)
+					return true;
+			}
+			else
+				return false;
+		}
+
+		//Right side of board
+		if (xLoc == numRowsInBoard) {
+			//Check for jump on red checkers - Diagonal left (white) - with king moves
+			if (CMCheckersBoard[yLoc + 1][numRowsInBoard - 1] == 4 || CMCheckersBoard[yLoc + 1][numRowsInBoard - 1] == 5 || CMCheckersBoard[yLoc + 1][numRowsInBoard - 1] == 6) {
+				//Check if the jump space is blocked
+				if (CMCheckersBoard[yLoc + 2][numRowsInBoard - 2] == 0)
+					return true;
+			}
+			//King moves
+			if (CMCheckersBoard[yLoc - 1][numRowsInBoard - 1] == 4 || CMCheckersBoard[yLoc - 1][numRowsInBoard - 1] == 5 || CMCheckersBoard[yLoc - 1][numRowsInBoard - 1] == 6) {
+				//Check if the jump space is blocked
+				if (CMCheckersBoard[yLoc - 2][numRowsInBoard - 2] == 0)
+					return true;
+			}
+			//Check for jump on red checkers - Diagonal right (white) - with king moves
+			if (CMCheckersBoard[yLoc + 1][0] == 4 || CMCheckersBoard[yLoc + 1][0] == 5 || CMCheckersBoard[yLoc + 1][0] == 6) {
+				//Check if the jump space is blocked
+				if (CMCheckersBoard[yLoc + 2][1] == 0)
+					return true;
+			}
+			//King moves
+			if (CMCheckersBoard[yLoc - 1][0] == 4 || CMCheckersBoard[yLoc - 1][0] == 5 || CMCheckersBoard[yLoc - 1][0] == 6) {
+				//Check if the jump space is blocked
+				if (CMCheckersBoard[yLoc - 2][1] == 0)
+					return true;
+			}
+			else
+				return false;
+		}
+
+		//Middle section of board
+		else {
+			//Check for jump on red checkers - Diagonal left (white) - with king moves
+			if (CMCheckersBoard[yLoc + 1][xLoc - 1] == 4 || CMCheckersBoard[yLoc + 1][xLoc - 1] == 5 || CMCheckersBoard[yLoc + 1][xLoc - 1] == 6) {
+				//Check if the jump space is blocked
+				if (CMCheckersBoard[yLoc + 2][xLoc - 2] == 0)
+					return true;
+			}
+			//King moves
+			if (CMCheckersBoard[yLoc - 1][xLoc - 1] == 4 || CMCheckersBoard[yLoc - 1][xLoc - 1] == 5 || CMCheckersBoard[yLoc - 1][xLoc - 1] == 6) {
+				//Check if the jump space is blocked
+				if (CMCheckersBoard[yLoc - 2][xLoc - 2] == 0)
+					return true;
+			}
+			//Check for jump on red checkers - Diagonal right (white) - with king moves
+			if (CMCheckersBoard[yLoc + 1][xLoc + 1] == 4 || CMCheckersBoard[yLoc + 1][xLoc + 1] == 5 || CMCheckersBoard[yLoc + 1][xLoc + 1] == 6) {
+				//Check if the jump space is blocked
+				if (CMCheckersBoard[yLoc + 2][xLoc + 2] == 0)
+					return true;
+			}
+			//King moves
+			if (CMCheckersBoard[yLoc - 1][xLoc + 1] == 4 || CMCheckersBoard[yLoc - 1][xLoc + 1] == 5 || CMCheckersBoard[yLoc - 1][xLoc + 1] == 6) {
+				//Check if the jump space is blocked
+				if (CMCheckersBoard[yLoc - 2][xLoc + 2] == 0)
+					return true;
+			}
+			else
+				return false;
+		}
+	}
+	//Test Red Checkers
+	if (player == 2) {
+		if (CMCheckersBoard[yLoc][xLoc] == 4 || CMCheckersBoard[yLoc][xLoc] == 5) {
+			//Left side of board
+			if (xLoc == 0) {
+				//Check for jump on red checkers - Diagonal left (white)
+				if (CMCheckersBoard[yLoc - 1][numRowsInBoard] == 1 || CMCheckersBoard[yLoc - 1][numRowsInBoard] == 2 || CMCheckersBoard[yLoc - 1][numRowsInBoard] == 3) {
+					//Check if the jump space is blocked
+					if (CMCheckersBoard[yLoc - 2][numRowsInBoard - 1] == 0)
+						return true;
+				}
+				//Check for jump on red checkers - Diagonal right (white)
+				if (CMCheckersBoard[yLoc - 1][xLoc + 1] == 1 || CMCheckersBoard[yLoc - 1][xLoc + 1] == 2 || CMCheckersBoard[yLoc - 1][xLoc + 1] == 3) {
+					//Check if the jump space is blocked
+					if (CMCheckersBoard[yLoc - 2][xLoc + 2] == 0)
+						return true;
+				}
+				else
+					return false;
+			}
+			//Right side of board
+			if (xLoc == numRowsInBoard) {
+				//Check for jump on red checkers - Diagonal left (white)
+				if (CMCheckersBoard[yLoc - 1][numRowsInBoard - 1] == 1 || CMCheckersBoard[yLoc - 1][numRowsInBoard - 1] == 2 || CMCheckersBoard[yLoc - 1][numRowsInBoard - 1] == 3) {
+					//Check if the jump space is blocked
+					if (CMCheckersBoard[yLoc - 2][numRowsInBoard - 2] == 0)
+						return true;
+				}
+				//Check for jump on red checkers - Diagonal right (white)
+				if (CMCheckersBoard[yLoc - 1][0] == 1 || CMCheckersBoard[yLoc - 1][0] == 2 || CMCheckersBoard[yLoc - 1][0] == 3) {
+					//Check if the jump space is blocked
+					if (CMCheckersBoard[yLoc - 2][1] == 0)
+						return true;
+				}
+				else
+					return false;
+			}
+			//Middle section of board
+			else {
+				//Check for jump on red checkers - Diagonal left (white)
+				if (CMCheckersBoard[yLoc - 1][xLoc - 1] == 1 || CMCheckersBoard[yLoc - 1][xLoc - 1] == 2 || CMCheckersBoard[yLoc - 1][xLoc - 1] == 3) {
+					//Check if the jump space is blocked
+					if (CMCheckersBoard[yLoc - 2][xLoc - 2] == 0)
+						return true;
+				}
+				//Check for jump on red checkers - Diagonal right (white)
+				if (CMCheckersBoard[yLoc - 1][xLoc + 1] == 1 || CMCheckersBoard[yLoc - 1][xLoc + 1] == 2 || CMCheckersBoard[yLoc - 1][xLoc + 1] == 3) {
+					//Check if the jump space is blocked
+					if (CMCheckersBoard[yLoc - 2][xLoc + 2] == 0)
+						return true;
+				}
+				else
+					return false;
+			}
+		}
+	}
+	//Test red king
+	if (CMCheckersBoard[yLoc][xLoc] == 6) {
+
+		//Left side of board
+		if (xLoc == 0) {
+			//Check for jump on red checkers - Diagonal left (white) - with king moves
+			if (CMCheckersBoard[yLoc + 1][numRowsInBoard] == 1 || CMCheckersBoard[yLoc + 1][numRowsInBoard] == 2 || CMCheckersBoard[yLoc + 1][numRowsInBoard] == 3) {
+				//Check if the jump space is blocked
+				if (CMCheckersBoard[yLoc + 2][numRowsInBoard - 1] == 0)
+					return true;
+			}
+			//regular moves
+			if (CMCheckersBoard[yLoc - 1][numRowsInBoard] == 1 || CMCheckersBoard[yLoc - 1][numRowsInBoard] == 2 || CMCheckersBoard[yLoc - 1][numRowsInBoard] == 3) {
+				//Check if the jump space is blocked
+				if (CMCheckersBoard[yLoc - 2][numRowsInBoard - 1] == 0)
+					return true;
+			}
+			//Check for jump on red checkers - Diagonal right (white) - with king moves
+			if (CMCheckersBoard[yLoc + 1][xLoc + 1] == 1 || CMCheckersBoard[yLoc + 1][xLoc + 1] == 2 || CMCheckersBoard[yLoc + 1][xLoc + 1] == 3) {
+				//Check if the jump space is blocked
+				if (CMCheckersBoard[yLoc + 2][xLoc + 2] == 0)
+					return true;
+			}
+			//regular moves
+			if (CMCheckersBoard[yLoc - 1][xLoc + 1] == 1 || CMCheckersBoard[yLoc - 1][xLoc + 1] == 2 || CMCheckersBoard[yLoc - 1][xLoc + 1] == 3) {
+				//Check if the jump space is blocked
+				if (CMCheckersBoard[yLoc - 2][xLoc + 2] == 0)
+					return true;
+			}
+			else
+				return false;
+		}
+
+		//Right side of board
+		if (xLoc == numRowsInBoard) {
+			//Check for jump on red checkers - Diagonal left (white) - with king moves
+			if (CMCheckersBoard[yLoc + 1][numRowsInBoard - 1] == 1 || CMCheckersBoard[yLoc + 1][numRowsInBoard - 1] == 2 || CMCheckersBoard[yLoc + 1][numRowsInBoard - 1] == 3) {
+				//Check if the jump space is blocked
+				if (CMCheckersBoard[yLoc + 2][numRowsInBoard - 2] == 0)
+					return true;
+			}
+			//King moves
+			if (CMCheckersBoard[yLoc - 1][numRowsInBoard - 1] == 1 || CMCheckersBoard[yLoc - 1][numRowsInBoard - 1] == 2 || CMCheckersBoard[yLoc - 1][numRowsInBoard - 1] == 3) {
+				//Check if the jump space is blocked
+				if (CMCheckersBoard[yLoc - 2][numRowsInBoard - 2] == 0)
+					return true;
+			}
+			//Check for jump on red checkers - Diagonal right (white) - with king moves
+			if (CMCheckersBoard[yLoc + 1][0] == 1 || CMCheckersBoard[yLoc + 1][0] == 2 || CMCheckersBoard[yLoc + 1][0] == 3) {
+				//Check if the jump space is blocked
+				if (CMCheckersBoard[yLoc + 2][1] == 0)
+					return true;
+			}
+			//King moves
+			if (CMCheckersBoard[yLoc - 1][0] == 1 || CMCheckersBoard[yLoc - 1][0] == 2 || CMCheckersBoard[yLoc - 1][0] == 3) {
+				//Check if the jump space is blocked
+				if (CMCheckersBoard[yLoc - 2][1] == 0)
+					return true;
+			}
+			else
+				return false;
+		}
+
+		//Middle section of board
+		else {
+			//Check for jump on red checkers - Diagonal left (white) - with king moves
+			if (CMCheckersBoard[yLoc + 1][xLoc - 1] == 1 || CMCheckersBoard[yLoc + 1][xLoc - 1] == 2 || CMCheckersBoard[yLoc + 1][xLoc - 1] == 3) {
+				//Check if the jump space is blocked
+				if (CMCheckersBoard[yLoc + 2][xLoc - 2] == 0)
+					return true;
+			}
+			//King moves
+			if (CMCheckersBoard[yLoc - 1][xLoc - 1] == 1 || CMCheckersBoard[yLoc - 1][xLoc - 1] == 2 || CMCheckersBoard[yLoc - 1][xLoc - 1] == 3) {
+				//Check if the jump space is blocked
+				if (CMCheckersBoard[yLoc - 2][xLoc - 2] == 0)
+					return true;
+			}
+			//Check for jump on red checkers - Diagonal right (white) - with king moves
+			if (CMCheckersBoard[yLoc + 1][xLoc + 1] == 1 || CMCheckersBoard[yLoc + 1][xLoc + 1] == 2 || CMCheckersBoard[yLoc + 1][xLoc + 1] == 3) {
+				//Check if the jump space is blocked
+				if (CMCheckersBoard[yLoc + 2][xLoc + 2] == 0)
+					return true;
+			}
+			//King moves
+			if (CMCheckersBoard[yLoc - 1][xLoc + 1] == 1 || CMCheckersBoard[yLoc - 1][xLoc + 1] == 2 || CMCheckersBoard[yLoc - 1][xLoc + 1] == 3) {
+				//Check if the jump space is blocked
+				if (CMCheckersBoard[yLoc - 2][xLoc + 2] == 0)
+					return true;
+			}
+			else
+				return false;
+		}
+	}
+}
+
+bool IsMove1Square(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInBoard, int player, int xLoc, int yLoc)
+{
+	if (player = 1) {
+		if (CMCheckersBoard[yLoc][xLoc] == 1 || CMCheckersBoard[yLoc][xLoc] == 2) {// 1 for soldier and 2 for mule (white)
+			//Checks for available moves at the left side of the board (white)
+			if (xLoc == 0) {
+				if (CMCheckersBoard[yLoc + 1][numRowsInBoard] != 0 && CMCheckersBoard[yLoc + 1][xLoc + 1] != 0)
+					return false;
+				else
+					return true;
+			}
+			//Checks for available moves at the right side of the board (white)
+			else if (xLoc == numRowsInBoard) {
+				if (CMCheckersBoard[yLoc + 1][numRowsInBoard - 1] != 0 && CMCheckersBoard[yLoc + 1][0] != 0)
+					return false;
+				else
+					return true;
+			}
+			//Checks for available moves in the middle section of the board (white)
+			else {
+				if (CMCheckersBoard[yLoc + 1][xLoc - 1] != 0 && CMCheckersBoard[yLoc + 1][xLoc + 1] != 0)
+					return false;
+				else
+					return true;
+			}
+		}
+		//Test for White Kings
+		if (CMCheckersBoard[yLoc][xLoc] == 3) {
+			//Test left side of board
+			if (xLoc == 0) {
+				//Test front moves
+				if (CMCheckersBoard[yLoc + 1][numRowsInBoard] != 0 && CMCheckersBoard[yLoc + 1][xLoc + 1] != 0)
+					return false;
+				//Test back moves
+				if (CMCheckersBoard[yLoc - 1][numRowsInBoard] != 0 && CMCheckersBoard[yLoc - 1][xLoc + 1] != 0)
+					return false;
+				else
+					return true;
+			}
+			//Test right side of the board
+			else if (xLoc == numRowsInBoard) {
+				//Test front moves
+				if (CMCheckersBoard[yLoc + 1][numRowsInBoard - 1] != 0 && CMCheckersBoard[yLoc + 1][0] != 0)
+					return false;
+				//Test back moves
+				if (CMCheckersBoard[yLoc - 1][numRowsInBoard - 1] != 0 && CMCheckersBoard[yLoc - 1][0] != 0)
+					return false;
+				else
+					return true;
+			}
+			//Test middle section of the board
+			else {
+				//Test front moves
+				if (CMCheckersBoard[yLoc + 1][xLoc - 1] != 0 && CMCheckersBoard[yLoc + 1][xLoc + 1] != 0)
+					return false;
+				//Test back moves
+				if (CMCheckersBoard[yLoc - 1][xLoc - 1] != 0 && CMCheckersBoard[yLoc - 1][xLoc + 1] != 0)
+					return false;
+				else
+					return true;
+			}
+		}
+	}
+	if (player = 2) {
+		//Test movement availability for red soldiers and red mules
+		if (CMCheckersBoard[yLoc][xLoc] == 4 || CMCheckersBoard[yLoc][xLoc] == 5) {
+			//Test for when the red piece is on the left side of the board (Red moves the opposite direction)
+			if (xLoc == 0) {
+				if (CMCheckersBoard[yLoc - 1][numRowsInBoard] != 0 && CMCheckersBoard[yLoc - 1][xLoc + 1] != 0)
+					return false;
+				else
+					return true;
+			}
+			//Test for when the red piece is on the right side of the board
+			else if (xLoc == numRowsInBoard) {
+				if (CMCheckersBoard[yLoc - 1][numRowsInBoard - 1] != 0 && CMCheckersBoard[yLoc - 1][0] != 0)
+					return false;
+				else
+					return true;
+			}
+			//Test for movement in the middle section of the board
+			else {
+				if (CMCheckersBoard[yLoc - 1][xLoc - 1] != 0 && CMCheckersBoard[yLoc - 1][xLoc + 1] != 0)
+					return false;
+				else
+					return true;
+			}
+		}
+		//Test for Red Kings
+		if (CMCheckersBoard[yLoc][xLoc] == 6) {
+			//Test left side of board
+			if (xLoc == 0) {
+				//Test back moves
+				if (CMCheckersBoard[yLoc + 1][numRowsInBoard] != 0 && CMCheckersBoard[yLoc + 1][xLoc + 1] != 0)
+					return false;
+				//Test front moves
+				if (CMCheckersBoard[yLoc - 1][numRowsInBoard] != 0 && CMCheckersBoard[yLoc - 1][xLoc + 1] != 0)
+					return false;
+				else
+					return true;
+			}
+			//Test right side of the board
+			else if (xLoc == numRowsInBoard) {
+				//Test back moves
+				if (CMCheckersBoard[yLoc + 1][numRowsInBoard - 1] != 0 && CMCheckersBoard[yLoc + 1][0] != 0)
+					return false;
+				//Test front moves
+				if (CMCheckersBoard[yLoc - 1][numRowsInBoard - 1] != 0 && CMCheckersBoard[yLoc - 1][0] != 0)
+					return false;
+				else
+					return true;
+			}
+			//Test middle section of the board
+			else {
+				//Test back moves
+				if (CMCheckersBoard[yLoc + 1][xLoc - 1] != 0 && CMCheckersBoard[yLoc + 1][xLoc + 1] != 0)
+					return false;
+				//Test front moves
+				if (CMCheckersBoard[yLoc - 1][xLoc - 1] != 0 && CMCheckersBoard[yLoc - 1][xLoc + 1] != 0)
+					return false;
+				else
+					return true;
+			}
+		}
+	}
+}
+
+int CountMove1Squares(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInBoard, int player, int xLocArray[], int yLocArray[]) {
+	int counter = 0;
+	for (int i = 0; i < MAX_PIECES; i++) {
+		yLocArray[i] = -1;
+		xLocArray[i] = -1;
+	}
+	for (int i = 0; i < numRowsInBoard; i++) {
+		for (int j = 0; j < numRowsInBoard; j++) {
+			if (player == 1 && (CMCheckersBoard[i][j] == 1 || CMCheckersBoard[i][j] == 2 || CMCheckersBoard[i][j] == 3)) {
+				if (IsMove1Square(CMCheckersBoard, numRowsInBoard, player, i, j) == true) {
+					yLocArray[counter] = i;
+					xLocArray[counter] = j;
+					counter++;
+				}
+			}
+			if (player == 2 && (CMCheckersBoard[i][j] == 4 || CMCheckersBoard[i][j] == 5 || CMCheckersBoard[i][j] == 6)) {
+				if (IsMove1Square(CMCheckersBoard, numRowsInBoard, player, i, j) == true) {
+					yLocArray[counter] = i;
+					xLocArray[counter] = j;
+					counter++;
+				}
+			}
+		}
+	}
+	return (counter);
+}
+
+int CountJumps(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInBoard, int player, int xLocArray[], int yLocArray[]) {
+	int counter = 0;
+	for (int i = 0; i < MAX_PIECES; i++) {
+		yLocArray[i] = -1;
+		xLocArray[i] = -1;
+		int counter = 0;
+	}
+	for (int i = 0; i < numRowsInBoard; i++) {
+		for (int j = 0; j < numRowsInBoard; j++) {
+			if (player == 1 && (CMCheckersBoard[i][j] == 1 || CMCheckersBoard[i][j] == 2 || CMCheckersBoard[i][j] == 3)) {
+				if (IsJump(CMCheckersBoard, numRowsInBoard, player, i, j) == true) {
+					yLocArray[counter] = i;
+					xLocArray[counter] = j;
+					counter++;
+				}
+			}
+			if (player == 2 && (CMCheckersBoard[i][j] == 4 || CMCheckersBoard[i][j] == 5 || CMCheckersBoard[i][j] == 6)) {
+				if (IsJump(CMCheckersBoard, numRowsInBoard, player, i, j) == true) {
+					yLocArray[counter] = i;
+					xLocArray[counter] = j;
+					counter++;
+				}
+			}
+		}
+	}
+	return(counter);
+}
+/*
+bool CheckList(int inArray1[], int inArray2[], int xIndex, int yIndex) {
+	for (int i = 0; i < MAX_ARRAY_SIZE; i++) {
+		if ((inArray1[i] == xIndex) && (inArray2[i] == yIndex)) {
+			return(true);
+		}
+		else {
+			return(false);
+		}
+	}
+}*/
+
+Coordinates squareToArray(int numRowsInBoard, int squareNum)
+{
+	int counter = 0;
+	Coordinates arrayCoordinates;
+	while (numRowsInBoard <= squareNum) {
+		squareNum -= numRowsInBoard;
+		counter++;
+	}
+
+	arrayCoordinates.columns = squareNum;
+	arrayCoordinates.rows = counter;
+	return (arrayCoordinates);
+}
+
+bool MakeMove(int CMCheckersBoard[MAX_ARRAY_SIZE][MAX_ARRAY_SIZE], int numRowsInBoard, int player, int fromSquareNum, int toSquareNum, bool &jumped, int* p)
+{
+	Coordinates fromSquare = squareToArray(numRowsInBoard, fromSquareNum);
+	Coordinates toSquare = squareToArray(numRowsInBoard, toSquareNum);
+	int ydistance = abs(fromSquare.columns - toSquare.columns);
+	int xdistance = abs(fromSquare.rows - toSquare.rows);
+	/* for testing if it's false or not */
+	int nonabsydistance = fromSquare.columns - toSquare.columns;
+	int nonabsxdistance = fromSquare.rows - toSquare.rows;
+	/* for testing its direction */
+	int temp = 0;
+
+	if (ydistance == 2 && xdistance == 2) {	/* if you try to move 2 squares but there is no piece to jump through*/
+		if (CMCheckersBoard[toSquare.rows][toSquare.columns] == 0) {
+			cout << "Error;  illegal move" << endl;
+			return(false);
+		}
+	}
+
+	else if (ydistance != 1 && xdistance != 1) { /* same thing */
+		cout << "Error; illegal move" << endl;
+		return(false);
+	}
+
+	else if (CMCheckersBoard[toSquare.rows][toSquare.columns] == WHITESOLDIER || CMCheckersBoard[toSquare.rows][toSquare.columns] == WHITEMULE) {
+		if (toSquareNum < fromSquareNum) { /* wrong direction */
+			cout << "Error; illegal move" << endl;
+			return(false);
+		}
+	}
+
+	else if (CMCheckersBoard[toSquare.rows][toSquare.columns] == REDSOLDIER || CMCheckersBoard[toSquare.rows][toSquare.columns] == REDMULE) {
+		if (toSquareNum > fromSquareNum) { /* wrong direction */
+			cout << "Error; illegal move" << endl;
+			return(false);
+		}
+	}
+
+	if (ydistance == 1 && xdistance == 1) {
+		temp = CMCheckersBoard[toSquare.rows][toSquare.columns]; /* swaps the 2 values */
+		CMCheckersBoard[toSquare.rows][toSquare.columns] = CMCheckersBoard[fromSquare.rows][fromSquare.columns];
+		CMCheckersBoard[fromSquare.rows][fromSquare.columns] = temp;
+	}
+
+	else if (ydistance == 1 && xdistance == numRowsInBoard - 1) {
+		temp = CMCheckersBoard[toSquare.rows][toSquare.columns]; /* swaps the 2 values */
+		CMCheckersBoard[toSquare.rows][toSquare.columns] = CMCheckersBoard[fromSquare.rows][fromSquare.columns];
+		CMCheckersBoard[fromSquare.rows][fromSquare.columns] = temp;
+	}
+
+	else if (ydistance == 2 && xdistance == 2) {
+		if (CMCheckersBoard[toSquare.rows][toSquare.columns] != 0) {
+			if (nonabsxdistance > 0 && nonabsydistance > 0) {
+				/* DO THIS PART */ // JUMP HERE
+				CMCheckersBoard[(fromSquare.rows) + 1][(fromSquare.columns) + 1] = NOPLAYER; //Taking out the enemy checker
+				temp = CMCheckersBoard[fromSquare.rows][fromSquare.columns]; //Swap
+				CMCheckersBoard[fromSquare.rows][fromSquare.columns] = CMCheckersBoard[toSquare.rows][toSquare.columns];
+				CMCheckersBoard[toSquare.rows][toSquare.columns] = temp;
+			}
+			if (nonabsxdistance < 0 && nonabsydistance > 0) {
+				CMCheckersBoard[(fromSquare.rows) + 1][(fromSquare.columns) - 1] = NOPLAYER; //Taking out the enemy checker
+				temp = CMCheckersBoard[fromSquare.rows][fromSquare.columns]; //Swap
+				CMCheckersBoard[fromSquare.rows][fromSquare.columns] = CMCheckersBoard[toSquare.rows][toSquare.columns];
+				CMCheckersBoard[toSquare.rows][toSquare.columns] = temp;
+			}
+			if (nonabsxdistance < 0 && nonabsydistance < 0) {
+				CMCheckersBoard[(fromSquare.rows) - 1][(fromSquare.columns) - 1] = NOPLAYER; //Taking out the enemy checker
+				temp = CMCheckersBoard[fromSquare.rows][fromSquare.columns]; //Swap
+				CMCheckersBoard[fromSquare.rows][fromSquare.columns] = CMCheckersBoard[toSquare.rows][toSquare.columns];
+				CMCheckersBoard[toSquare.rows][toSquare.columns] = temp;
+			}
+			if (nonabsxdistance > 0 && nonabsydistance < 0) {
+				CMCheckersBoard[(fromSquare.rows) - 1][(fromSquare.columns) + 1] = NOPLAYER; //Taking out the enemy checker
+				temp = CMCheckersBoard[fromSquare.rows][fromSquare.columns]; //Swap
+				CMCheckersBoard[fromSquare.rows][fromSquare.columns] = CMCheckersBoard[toSquare.rows][toSquare.columns];
+				CMCheckersBoard[toSquare.rows][toSquare.columns] = temp;
+			}
+			jumped = true;
+		}
+	}
+
+	if (CMCheckersBoard[toSquare.rows][toSquare.columns] == WHITESOLDIER) {
+		if (toSquare.rows == 1) { /* if soldier gets to the end, turn to king */
+			CMCheckersBoard[toSquare.rows][toSquare.columns] = WHITEKING;
+		}
+	}
+
+	if (CMCheckersBoard[toSquare.rows][toSquare.columns] == WHITEMULE) {
+		if (toSquare.rows == 1) { /* if mule gets to the end, you lose */
+			CMCheckersBoard[toSquare.rows][toSquare.columns] = WHITEKING;
+			cout << "White has created a Mule King, Red wins the game" << endl;
+			return(true);
+		}
+	}
+
+	if (CMCheckersBoard[toSquare.rows][toSquare.columns] == REDSOLDIER) {
+		if (toSquare.rows == MAX_ARRAY_SIZE) { /* if soldier gets to the end, turn to king */
+			CMCheckersBoard[toSquare.rows][toSquare.columns] = REDKING;
+		}
+	}
+
+	if (CMCheckersBoard[toSquare.rows][toSquare.columns] == REDMULE) {
+		if (toSquare.rows == MAX_ARRAY_SIZE) { /* if mule gets to the end, you lose */
+			CMCheckersBoard[toSquare.rows][toSquare.columns] = REDKING;
+			cout << "Red has created a Mule King, White wins the game" << endl;
+			return(true);
+		}
+	}
+}
